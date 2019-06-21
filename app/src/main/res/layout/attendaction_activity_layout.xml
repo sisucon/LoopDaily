@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:orientation="vertical"
+			  android:layout_marginTop="20dp"
+			  android:layout_width="match_parent"
+			  android:layout_height="wrap_content">
+
+			<ImageView android:layout_width="wrap_content" android:layout_height="80dp"
+					   android:scaleType="fitXY"
+					   android:adjustViewBounds="true"
+					   android:src="@drawable/icon_synx"
+					   android:layout_gravity="center"
+
+					   android:id="@+id/attend_action_img"/>
+			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					  android:layout_marginTop="15dp"
+					  android:text="敷面膜"
+					  android:id="@+id/attend_action_name"
+					  android:textSize="20sp"
+					  android:textColor="@color/normalColor"
+			/>
+	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_marginLeft="30dp"
+			  android:text="创建于 xxxx-xx-xx"
+			  android:id="@+id/attend_action_creattime"
+			  android:layout_marginStart="30dp"/>
+		<LinearLayout
+				android:layout_marginTop="20dp"
+				android:paddingLeft="30dp"
+				android:paddingRight="30dp"
+				android:orientation="vertical"
+				android:layout_width="match_parent" android:layout_height="match_parent">
+			<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp"
+			android:orientation="horizontal">
+				<ImageView android:layout_width="20dp"
+						   android:scaleType="fitXY"
+						   android:adjustViewBounds="true"
+						   android:layout_height="20dp" android:src="@drawable/icon_people"/>
+				<TextView
+						android:layout_marginLeft="5dp" android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:text="xxxx" android:textSize="18dp" android:id="@+id/attend_action_attendnumber"
+						  android:textColor="@color/design_default_color_primary"/>
+				<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+						  android:text="人参加" android:textSize="18dp"
+						  android:textColor="@color/normalColor"/>
+			</LinearLayout>
+
+			<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp"
+						  android:orientation="horizontal">
+				<ImageView android:layout_width="20dp"
+						   android:scaleType="fitXY"
+						   android:adjustViewBounds="true"
+						   android:layout_height="20dp" android:src="@drawable/icon_success"/>
+				<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+						  android:text="xxxx" android:textSize="18dp" android:id="@+id/attend_action_successtimes"
+						  android:textColor="@color/titleColor"/>
+				<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+						  android:text="次完成" android:textSize="18dp"
+						  android:textColor="@color/normalColor"/>
+			</LinearLayout>
+
+			<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp"
+						  android:orientation="horizontal">
+				<ImageView android:layout_width="wrap_content"
+						   android:scaleType="fitXY"
+						   android:adjustViewBounds="true"
+						   android:layout_height="22dp" android:src="@drawable/icon_loop"/>
+					<TextView
+							android:layout_marginLeft="5dp"
+							android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="默认周期: 一天一次" android:textColor="@color/normalColor" android:textSize="18sp"
+							android:id="@+id/attend_action_loopTime" android:layout_marginStart="5dp"/>
+			</LinearLayout>
+		</LinearLayout>
+
+	<TextView
+		android:id="@+id/attend_attendbutton"
+		android:layout_marginTop="70dp"
+		android:layout_gravity="center"
+		android:textColor="#ffff"
+		android:textSize="17sp"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:background="@drawable/box_pad"
+		android:text="@string/attend"/>
+</LinearLayout>

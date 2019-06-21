@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_synx"
+            android:icon="@drawable/icon_synx"
+            android:title="同步数据" />
+
+        <!--<item-->
+            <!--android:id="@+id/nav_LESSION_FEB"-->
+            <!--android:icon="@drawable/icon_feb"-->
+            <!--android:title="课堂反馈"/>-->
+        <!--<item-->
+            <!--android:id="@+id/nav_SIGNIN_REVISE"-->
+            <!--android:icon="@drawable/icon_restudy"-->
+            <!--android:title="复习签到" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_UPWORK"-->
+            <!--android:icon="@drawable/icon_work"-->
+            <!--android:title="作业上传" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_ASK_FOR_LEAVE"-->
+            <!--android:icon="@drawable/icon_afl"-->
+            <!--android:title="请假调课" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_LX"-->
+            <!--android:icon="@drawable/icon_phone"-->
+            <!--android:title="联系我们" />-->
+
+    </group>
+
+
+</menu>

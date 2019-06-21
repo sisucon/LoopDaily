@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mxn.soul.flowingdrawer_core.FlowingDrawer
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/drawerlayout"
+        app:edPosition="1"
+        app:edMenuSize="260dp"
+        app:edMenuBackground="#00dddddd"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        tools:context=".Activity.MainActivity">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/content"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent" android:layout_height="match_parent">
+                    <com.example.loopdaily.lib.NoScrollViewPager android:layout_width="match_parent"
+                                              android:id="@+id/main_viewpager"
+                                                                 android:layout_height="0dp"
+                    android:layout_weight="100"/>
+                <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/navigation_tablayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        app:tabGravity="fill"
+                        android:layout_weight="0"
+                        app:tabIndicatorHeight="0dp"
+                        app:tabMode="fixed"
+                        app:tabSelectedTextColor="@color/textCilck"
+                        app:tabTextColor="#000" />
+            </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.mxn.soul.flowingdrawer_core.FlowingMenuLayout
+            android:id="@+id/menulayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <FrameLayout
+            android:id="@+id/id_container_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.mxn.soul.flowingdrawer_core.FlowingMenuLayout>
+
+</com.mxn.soul.flowingdrawer_core.FlowingDrawer>

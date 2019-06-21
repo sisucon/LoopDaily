@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">LoopDaily</string>
+	<string name="login">登录</string>
+	<string name="register">注册</string>
+	<string name="server_host">http://192.168.0.190:8080</string>
+	<string name="please_enter_username">请输入用户名</string>
+	<string name="re_enter">再次输入</string>
+	<string name="please_enter_password">请输入密码</string>
+	<string name="attend">参加</string>
+	<string name="createwhen">创建于</string>
+	<string name="OK">确定</string>
+</resources>

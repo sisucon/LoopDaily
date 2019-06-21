@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="textBox">#1e000000</color>
+    <color name="textCilck">#009e27</color>
+    <color name="white">#ffffff</color>
+    <color name="nromalText">#393939</color>
+    <color name="titleColor">#44b07d</color>
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_marginTop="20dp"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent">
+	<ImageView android:layout_width="wrap_content" android:layout_height="80dp"
+			   android:scaleType="fitXY"
+			   android:adjustViewBounds="true"
+			   android:src="@drawable/icon_synx"
+			   android:layout_gravity="center"
+
+			   android:id="@+id/select_action_img"/>
+	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+			  android:layout_gravity="center"
+			  android:layout_marginTop="15dp"
+				android:id="@+id/select_name"
+			  android:textSize="20sp"
+			  android:textColor="@color/normalColor"
+	/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_marginTop="30dp"
+		  android:text="下次次开始时间" android:textSize="20dp" android:textColor="@color/normalColor"/>
+
+	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="17dp" android:text="点我选择时间" android:layout_gravity="center" android:layout_marginTop="20dp"
+	 android:id="@+id/select_starttime_picker"/>
+
+	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_marginTop="40dp"
+			  android:text="循环周期" android:textSize="20dp" android:textColor="@color/normalColor"/>
+
+	<LinearLayout android:layout_gravity="center" android:layout_marginTop="10dp"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+		<EditText android:text="0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="17sp"
+	android:inputType="number"	android:id="@+id/select_day"/><TextView android:layout_width="wrap_content" android:textSize="17sp"
+												android:layout_height="wrap_content" android:text="天"
+	android:textColor="@color/normalColor"/><EditText android:inputType="number" android:text="0" android:textSize="17sp" android:layout_width="wrap_content" android:layout_height="wrap_content"
+													  android:id="@+id/select_hour"/><TextView android:textSize="17sp" android:layout_width="wrap_content"
+																							  android:layout_height="wrap_content" android:text="小时"
+																							  android:textColor="@color/normalColor"/>
+		<EditText android:inputType="number" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="17sp"
+				  android:id="@+id/select_min"/><TextView android:textSize="17sp" android:layout_width="wrap_content"
+														  android:layout_height="wrap_content" android:text="分钟"
+														  android:textColor="@color/normalColor"/>
+	</LinearLayout>
+
+	<TextView
+			android:id="@+id/select_okbutton"
+			android:layout_marginTop="70dp"
+			android:layout_gravity="center"
+			android:textColor="#ffff"
+			android:textSize="17sp"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:background="@drawable/box_pad"
+			android:text="@string/OK"/>
+</LinearLayout>
