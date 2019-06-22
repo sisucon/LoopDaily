@@ -53,7 +53,7 @@ class AttendActionSelectActivity : AppCompatActivity(){
                 NetUtil.GetMessage(getString(R.string.server_host)+"/action/getAction/"+id),
                 ActionModel::class.java)
             Handler(this.mainLooper).post(Runnable {
-                Utils.getInstance(this).GetImg(getString(R.string.server_host)+"/upload/actionDefault/"+id+"/"+action.imageName,img)
+                Utils.getInstance(this).GetImg(getString(R.string.server_host_file)+"/upload/actionDefault/"+id+"/"+action.imageName,img)
                 name.text = action.name
             })
         }).start()
@@ -68,7 +68,7 @@ class AttendActionSelectActivity : AppCompatActivity(){
                 Toasty.error(this,"请输入周期时间").show()
             }else{
                 val loopTime = Date((dayText.text.toString().toLong()*1000*60*60*24)+(hourText.text.toString().toLong()*1000*60*60)+(minText.text.toString().toLong()*1000*60))
-                val actionDB = ActionDB(LitePal.count(ActionDB::class.java).toLong(),action.name, selectDate!!,loopTime.time,action.type,true,getString(R.string.server_host)+"/upload/actionDefault/"+action.id+"/"+action.imageName
+                val actionDB = ActionDB(LitePal.count(ActionDB::class.java).toLong(),action.name, selectDate!!,loopTime.time,action.type,true,getString(R.string.server_host_file)+"/upload/actionDefault/"+action.id+"/"+action.imageName
                     ,action.id)
                 if (actionDB.save()){
                     Toasty.success(this,"成功").show()

@@ -21,7 +21,7 @@ class ActionViewHolder (parent: ViewParent): BaseViewHolder<ActionModel>(parent 
     override fun setData(data: ActionModel) {
         name.text = data.name
         Handler(context?.mainLooper).post(Runnable {
-            Utils.getInstance(context).GetImg(context.getString(R.string.server_host)+"/upload/actionDefault/"+data.id+"/"+data.imageName,img)
+            Utils.getInstance(context).GetImg(context.getString(R.string.server_host_file)+"/upload/actionDefault/"+data.id+"/"+data.imageName,img)
         })
     }
 }

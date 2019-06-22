@@ -67,7 +67,7 @@ class TodayFragment : Fragment() {
             val eventList = LitePal.where("startDay = ? and actionId = ?",""+Utils.getStartTime().time,""+it._id).find(ActionEventDB::class.java)
             if (eventList.size>0){
                 for (event in eventList){
-                    timelinemodelList.add(TimeLineModel(it.name,event.time,if (event.isSuccess)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,event._id))
+                    timelinemodelList.add(TimeLineModel(it.name,event.time,if (event.isSuccess)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it.remoteId,event._id))
                 }
             }else{
                 if (todayStart.time-startDay.time>0){
@@ -77,13 +77,16 @@ class TodayFragment : Fragment() {
                         val temp =  ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it._id,it.remoteId,false,Date(todayStart.time+tempTime))
                         temp.save()
                         timelinemodelList.add(TimeLineModel(it.name,Date(todayStart.time+tempTime),OrderStatus.INACTIVE,"",it._id,temp._id))
-
                         tempTime+=it.loopTime
                         index++
                     }
                 }else{
                     var temp = todayEnd.time - startDay.time
                     var index = 0
+                    val tempd = ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it._id,it.remoteId,false,Date(startDay.time))
+                    tempd.save()
+                    timelinemodelList.add(TimeLineModel(it.name,Date(startDay.time+it.loopTime),OrderStatus.INACTIVE,"",it._id,tempd._id))
+                    index++
                     while (temp/it.loopTime>=1){
                         temp -= it.loopTime
                       val tempd = ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it._id,it.remoteId,false,Date(startDay.time+it.loopTime))
@@ -97,5 +100,10 @@ class TodayFragment : Fragment() {
 
             }
         }
+        timelinemodelList.sortBy {
+                it.date
+        }
+        timeLineAdapter.setData(timelinemodelList)
+        timeLineAdapter.notifyDataSetChanged()
     }
 }

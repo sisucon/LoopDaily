@@ -33,7 +33,8 @@ class ActionEventDetailActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.action_event_detail_layout)
         ButterKnife.bind(this)
-        eventId = intent.getStringExtra("id").toLong()
+        var ra = intent.getStringExtra("id")
+        eventId = ra.toLong()
         eventModel =  LitePal.find(ActionEventDB::class.java, eventId!!)
         initView()
     }
@@ -41,10 +42,10 @@ class ActionEventDetailActivity : AppCompatActivity(){
     fun initView(){
         Thread(Runnable {
             var action = Gson().fromJson<ActionModel>(
-                NetUtil.GetMessage(getString(R.string.server_host)+"/action/getAction/"+eventModel.actionId),
+                NetUtil.GetMessage(getString(R.string.server_host)+"/action/getAction/"+eventModel.remoteId),
                 ActionModel::class.java)
             Handler(this.mainLooper).post(Runnable {
-                Utils.getInstance(this).GetImg(getString(R.string.server_host)+"/upload/actionDefault/"+eventModel.actionId+"/"+action.imageName,img)
+                Utils.getInstance(this).GetImg(getString(R.string.server_host_file)+"/upload/actionDefault/"+action.id+"/"+action.imageName,img)
                 name.text = action.name
             })
         }).start()

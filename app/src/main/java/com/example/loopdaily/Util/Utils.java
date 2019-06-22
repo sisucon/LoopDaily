@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class Utils {
     private Context context;
@@ -125,4 +126,6 @@ public class Utils {
         int day = hour/24;
         return day>0?day+"天"+(hour>0?hour+"小时一次":""):hour>0?hour+"小时"+(second>0?second+"分钟一次":""):second+"分钟一次";
     }
+
+
 }

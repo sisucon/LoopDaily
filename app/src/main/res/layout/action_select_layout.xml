@@ -6,9 +6,7 @@
 	<ImageView android:layout_width="wrap_content" android:layout_height="80dp"
 			   android:scaleType="fitXY"
 			   android:adjustViewBounds="true"
-			   android:src="@drawable/icon_synx"
 			   android:layout_gravity="center"
-
 			   android:id="@+id/select_action_img"/>
 	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
 			  android:layout_gravity="center"
@@ -18,7 +16,7 @@
 			  android:textColor="@color/normalColor"
 	/>
 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_marginTop="30dp"
-		  android:text="下次次开始时间" android:textSize="20dp" android:textColor="@color/normalColor"/>
+		  android:text="下次开始时间" android:textSize="20dp" android:textColor="@color/normalColor"/>
 
 	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="17dp" android:text="点我选择时间" android:layout_gravity="center" android:layout_marginTop="20dp"
 	 android:id="@+id/select_starttime_picker"/>

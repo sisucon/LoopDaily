@@ -3,6 +3,8 @@
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:fitsSystemWindows="true"
+				android:scaleType="fitXY"
+				android:adjustViewBounds="true"
 				android:background="@drawable/loop_bg">
 
 	<LinearLayout

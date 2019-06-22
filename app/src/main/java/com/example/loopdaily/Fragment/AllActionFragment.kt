@@ -42,6 +42,7 @@ class AllActionFragment : Fragment(){
         itemDecoration.setPaddingEdgeSide(true)//是否为左右2边添加padding.默认true.
         itemDecoration.setPaddingStart(true)//是否在给第一行的item添加上padding(不包含header).默认true.
         itemDecoration.setPaddingHeaderFooter(false)//是否对Header于Footer有效,默认false.
+
         easyRecyclerView = rootView.findViewById(R.id.allaction_recyclerview)
         easyRecyclerView.addItemDecoration(itemDecoration)
         easyRecyclerView.setLayoutManager(StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL))

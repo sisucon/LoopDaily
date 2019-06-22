@@ -54,7 +54,7 @@ class AttendActionActivity : AppCompatActivity(){
         Thread(Runnable {
             var action = Gson().fromJson<ActionModel>(NetUtil.GetMessage(getString(R.string.server_host)+"/action/getAction/"+id),ActionModel::class.java)
             Handler(this.mainLooper).post(Runnable {
-                Utils.getInstance(this).GetImg(getString(R.string.server_host)+"/upload/actionDefault/"+id+"/"+action.imageName,img)
+                Utils.getInstance(this).GetImg(getString(R.string.server_host_file)+"/upload/actionDefault/"+id+"/"+action.imageName,img)
                 attendNumber.text = ""+action.attendNumber
                 createTime.text = getString(R.string.createwhen)+Utils.DateToLessionType(Date(action.uploadTime))
                 loopTime.text = Utils.loopTimeToString(action.loopTime)

@@ -35,7 +35,7 @@ class MenuFragment : Fragment() {
         val severUserModel = Gson().fromJson<ServerUserModel>(NetUtil.GetMessage(getString(R.string.server_host)+"/user/myInfo"), ServerUserModel::class.java)
         Handler(context?.mainLooper).post(Runnable {
             username_menu.text = severUserModel.userName
-            userAvator.setImageURL(getString(R.string.server_host)+"/upload/avator/"+severUserModel.userName+"/"+severUserModel.avatorFileName)
+            userAvator.setImageURL(getString(R.string.server_host_file)+"/upload/avator/"+severUserModel.userName+"/"+severUserModel.avatorFileName)
         })
     }).start()
 
