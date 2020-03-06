@@ -2,8 +2,11 @@
     <string name="app_name">LoopDaily</string>
 	<string name="login">登录</string>
 	<string name="register">注册</string>
-	<string name="server_host_file">http://www.sisucon.pw</string>
-	<string name="server_host">http://www.sisucon.pw:8080</string>
+	<!--<string name="server_host_file">http://www.sisucon.pw</string>-->
+	<string name="server_host_file">http://192.168.0.10:8080</string>
+
+	<!--<string name="server_host">http://www.sisucon.pw:8080</string>-->
+	<string name="server_host">http://192.168.0.10:8080</string>
 
 	<string name="please_enter_username">请输入用户名</string>
 	<string name="re_enter">再次输入</string>
@@ -11,4 +14,5 @@
 	<string name="attend">参加</string>
 	<string name="createwhen">创建于</string>
 	<string name="OK">确定</string>
+	<string name="today_plan">今日安排</string>
 </resources>

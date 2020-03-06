@@ -14,7 +14,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp">
 
-        <com.example.loopdaily.lib.CircleImageView
+        <com.sisucon.loopdaily.lib.CircleImageView
 
             android:layout_marginLeft="15dp"
             android:id="@+id/mypage_userimg"

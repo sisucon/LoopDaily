@@ -4,6 +4,27 @@
 			  android:orientation="vertical"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent">
+		<RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+		android:background="@color/colorPrimaryDark"
+		android:paddingTop="5dp"
+		android:paddingBottom="5dp">
+			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="@string/today_plan"
+					  android:textSize="18sp"
+					  android:layout_centerInParent="true"
+			android:textColor="@color/white"
+			/>
+			<ImageView android:layout_width="20dp" android:layout_height="wrap_content"
+					   android:scaleType="fitXY"
+					   android:layout_gravity="center"
+					   android:adjustViewBounds="true"
+					   android:src="@drawable/icon_add"
+					   android:layout_alignParentRight="true"
+					   android:layout_marginRight="20dp"
+					   android:id="@+id/today_add_button"
+
+					   android:layout_alignParentEnd="true"/>
+		</RelativeLayout>
 		<com.jude.easyrecyclerview.EasyRecyclerView android:layout_width="match_parent"
 							android:id="@+id/today_recyclerView"
 												   android:layout_height="match_parent"

@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-          package="com.example.loopdaily">
+          package="com.sisucon.loopdaily">
     <!--用于访问网络，网络定位需要上网-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--android:networkSecurityConfig="@xml/network_security_config"-->
     <application
             android:name="org.litepal.LitePalApplication"
             android:allowBackup="true"
             android:icon="@drawable/loop_icon"
             android:label="@string/app_name"
             android:roundIcon="@drawable/loop_icon"
+            android:usesCleartextTraffic="true"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning" >
 
-        <activity android:name=".Activity.LoginActivity">
+        <activity android:name="com.sisucon.loopdaily.Activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -20,37 +22,43 @@
         </activity>
 
 
-        <activity android:name=".Activity.MainActivity">
+        <activity android:name="com.sisucon.loopdaily.Activity.MainActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.AttendActionActivity">
+        <activity android:name="com.sisucon.loopdaily.Activity.AttendActionActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.AttendActionSelectActivity">
+        <activity android:name="com.sisucon.loopdaily.Activity.AttendActionSelectActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.ShowMyAttendActivity">
+        <activity android:name="com.sisucon.loopdaily.Activity.ShowMyAttendActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.ActionEventDetailActivity">
+        <activity android:name="com.sisucon.loopdaily.Activity.ActionEventDetailActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.ChangeSelectActivity">
+        <activity android:name="com.sisucon.loopdaily.Activity.ChangeSelectActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.sisucon.loopdaily.Activity.AddPlanActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>

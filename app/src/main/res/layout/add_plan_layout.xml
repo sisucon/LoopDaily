@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_marginTop="20dp"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent">
+
+	<LinearLayout android:layout_gravity="center" android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+			<TextView android:layout_width="wrap_content" android:textColor="@color/nromalText" android:textSize="17sp" android:layout_height="wrap_content" android:text="日程名字:"/>
+				<EditText android:layout_width="100dp" android:layout_height="wrap_content" android:id="@+id/plan_name"/>
+	</LinearLayout>
+	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_marginTop="30dp"
+			  android:text="下次开始时间" android:textSize="20dp" android:textColor="@color/normalColor"/>
+
+	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="17dp" android:text="点我选择时间" android:layout_gravity="center" android:layout_marginTop="20dp"
+			  android:id="@+id/plan_select_starttime_picker"/>
+	<LinearLayout android:layout_width="match_parent" android:gravity="center" android:layout_marginTop="30dp" android:layout_height="wrap_content" android:orientation="horizontal">
+		<TextView android:layout_width="wrap_content" android:textColor="@color/nromalText" android:textSize="16sp" android:layout_height="wrap_content" android:text="是否循环: "/>
+		<com.suke.widget.SwitchButton  android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/plan_switch"/>
+	</LinearLayout>
+
+	<LinearLayout android:layout_width="match_parent" android:gravity="center" android:layout_marginTop="30dp" android:layout_height="wrap_content" android:orientation="horizontal">
+		<TextView android:layout_width="wrap_content" android:textColor="@color/nromalText" android:textSize="16sp" android:layout_height="wrap_content" android:text="是否提醒: "/>
+		<com.suke.widget.SwitchButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/plan_remind_switch" app:sb_checked="true"/>
+	</LinearLayout>
+	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:layout_marginTop="40dp"
+			  android:visibility="gone" android:text="循环周期" android:id="@+id/plan_loopText" android:textSize="20dp" android:textColor="@color/normalColor"/>
+
+	<LinearLayout android:visibility="gone" android:id="@+id/plan_loop_bord" android:layout_gravity="center" android:layout_marginTop="10dp"
+				  android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+		<EditText android:text="0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="17sp"
+				  android:inputType="number"	android:id="@+id/plan_select_day"/><TextView android:layout_width="wrap_content" android:textSize="17sp"
+																						android:layout_height="wrap_content" android:text="天"
+																						android:textColor="@color/normalColor"/><EditText android:inputType="number" android:text="0" android:textSize="17sp" android:layout_width="wrap_content" android:layout_height="wrap_content"
+																																		  android:id="@+id/plan_select_hour"/><TextView android:textSize="17sp" android:layout_width="wrap_content"
+																																												   android:layout_height="wrap_content" android:text="小时"
+																																												   android:textColor="@color/normalColor"/>
+		<EditText android:inputType="number" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="17sp"
+				  android:id="@+id/plan_select_min"/><TextView android:textSize="17sp" android:layout_width="wrap_content"
+														  android:layout_height="wrap_content" android:text="分钟"
+														  android:textColor="@color/normalColor"/>
+	</LinearLayout>
+
+	<TextView
+			android:id="@+id/plan_select_okbutton"
+			android:layout_marginTop="70dp"
+			android:layout_gravity="center"
+			android:textColor="#ffff"
+			android:textSize="17sp"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:background="@drawable/box_pad"
+			android:text="@string/OK"/>
+</LinearLayout>

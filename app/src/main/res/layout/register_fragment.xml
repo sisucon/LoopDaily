@@ -25,7 +25,7 @@
 				android:id="@+id/register_phonenum_layout"
 				app:hintTextAppearance="@style/hintTextStyle"
 				android:hint="@string/please_enter_username">
-			<com.example.loopdaily.lib.MyEditText
+			<com.sisucon.loopdaily.lib.MyEditText
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
 					android:id="@+id/register_phontNum"
@@ -57,7 +57,7 @@
 															   android:id="@+id/register_password_layout_re"
 															   app:hintTextAppearance="@style/hintTextStyle"
 		>
-			<com.example.loopdaily.lib.MyEditText android:layout_width="match_parent"
+			<com.sisucon.loopdaily.lib.MyEditText android:layout_width="match_parent"
 												  android:layout_height="match_parent"
 												  android:id="@+id/register_password_re"
 												  android:layout_weight="2"
@@ -89,7 +89,7 @@
 															   android:id="@+id/register_password_layout"
 															   app:hintTextAppearance="@style/hintTextStyle"
 		>
-			<com.example.loopdaily.lib.MyEditText android:layout_width="match_parent"
+			<com.sisucon.loopdaily.lib.MyEditText android:layout_width="match_parent"
 												  android:layout_height="match_parent"
 												  android:id="@+id/register_password"
 												  android:layout_weight="2"
