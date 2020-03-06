@@ -1,5 +1,6 @@
 package com.sisucon.loopdaily.Fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import com.sisucon.loopdaily.Util.UserModel
 import com.sisucon.loopdaily.lib.MyEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
+import com.sisucon.loopdaily.Activity.MainActivity
 import es.dmoral.toasty.Toasty
 
 class RegisterFragment : Fragment(){
@@ -39,6 +41,16 @@ class RegisterFragment : Fragment(){
                Handler(context!!.mainLooper).post(Runnable {
                    if (replyMessage.result){
                        Toasty.success(context!!,replyMessage.message).show()
+                       Thread(Runnable { val reply =  NetUtil.PostUserMessage(getString(R.string.server_host)+"/login",phoneText.text.toString(),passwordText.text.toString())
+                           Handler(context!!.mainLooper).post(Runnable {
+                               if (reply.result){
+                                   startActivity(Intent().setClass(activity, MainActivity::class.java))
+                               }else{
+                                   println(reply.message)
+                                   Toasty.error(context!!, reply.message).show()
+                               }
+                           })
+                       }).start()
                    }else{
                        Toasty.error(context!!,replyMessage.message).show()
                    }
