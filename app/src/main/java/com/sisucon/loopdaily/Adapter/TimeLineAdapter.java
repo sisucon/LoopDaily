@@ -2,6 +2,7 @@ package com.sisucon.loopdaily.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ public class TimeLineAdapter  extends RecyclerView.Adapter<TimeLineViewHolder> {
          holder.timelineView.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
+                Log.d("eventid",""+timeLineModelList.get(position).getEventId());
                 context.startActivity(new Intent(context, ActionEventDetailActivity.class).putExtra("id",""+timeLineModelList.get(position).getEventId()));
              }
          });

@@ -14,6 +14,9 @@ import com.sisucon.loopdaily.Util.ServerUserModel
 import com.sisucon.loopdaily.lib.CircleImageView
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.sisucon.loopdaily.Model.ActionModel
+import com.sisucon.loopdaily.Model.PlanDB
 
 class MenuFragment : Fragment() {
     lateinit var unbinder : Unbinder
@@ -29,8 +32,10 @@ class MenuFragment : Fragment() {
         return rootView
     }
 
-    fun updateUserInfoToView() = Thread(Runnable {
+    private fun updateUserInfoToView() = Thread(Runnable {
         val severUserModel = Gson().fromJson<ServerUserModel>(NetUtil.GetMessage(getString(R.string.server_host)+"/user/myInfo"), ServerUserModel::class.java)
+        val planModelList = NetUtil.getPlanDB(getString(R.string.server_host)+"/plan/getPlan")
+
         Handler(context?.mainLooper).post(Runnable {
             username_menu.text = severUserModel.userName
             userAvator.setImageURL(getString(R.string.server_host_file)+"/upload/avator/"+severUserModel.userName+"/"+severUserModel.avatorFileName)

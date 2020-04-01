@@ -30,8 +30,9 @@ class ActionEventDetailActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.action_event_detail_layout)
         ButterKnife.bind(this)
-        var ra = intent.getStringExtra("id")
+        val ra = intent.getStringExtra("id")
         eventId = ra.toLong()
+        println(LitePal.findAll(ActionEventDB::class.java))
         eventModel =  LitePal.find(ActionEventDB::class.java, eventId!!)
         initView()
     }

@@ -1,7 +1,13 @@
 package com.sisucon.loopdaily.Util
 
+import android.content.Context
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.sisucon.loopdaily.Activity.MainActivity
+import com.sisucon.loopdaily.Model.PlanDB
+import com.sisucon.loopdaily.R
 import okhttp3.*
+import org.litepal.LitePal
 import java.util.concurrent.TimeUnit
 
 class NetUtil {
@@ -24,15 +30,39 @@ class NetUtil {
                 return NotConnectReply
             }
         }
-
-
-
-        fun PostMessage (url:String,json:String): ReplyMessage{
+/*从服务器获得PlanDB*/
+        fun getPlanDB(url: String): List<PlanDB> {
+        val planJsonList = Gson().fromJson<List<PlanJsonRemote>>(NetUtil.GetMessage(url), object : TypeToken<List<PlanJsonRemote>>() {}.type)
+        val planList = mutableListOf<PlanDB>()
+        planJsonList.forEach {
+            //判断本地是否已存在这个plan,如果有则更新
+            var plan = LitePal.where("remoteId = ?",""+it.id).findFirst(PlanDB::class.java)
+            if (plan!=null){
+                plan = PlanDB(it)
+                plan.save()
+            }else{
+                plan =  PlanDB(it)
+                plan.save()
+            }
+            planList.add(plan)
+        }
+    return planList
+}
+        fun PostMessage (url:String,json:String): ReplyMessage
+        {
             val okHttp = CreateOkHttpClient(url)
             val requestBody:RequestBody = FormBody.create(MediaType.parse("application/json"),json)
             val request : Request = Request.Builder().url(url).post(requestBody).build()
             val response : Response = okHttp.newCall(request).execute()
             return Gson().fromJson(response.body()?.string(),ReplyMessage::class.java)
+        }
+
+        fun PostClass(url: String,json: String):String?{
+            val okHttp = CreateOkHttpClient(url)
+            val requestBody:RequestBody = FormBody.create(MediaType.parse("application/json"),json)
+            val request : Request = Request.Builder().url(url).post(requestBody).build()
+            val response : Response = okHttp.newCall(request).execute()
+            return response.body()?.string()
         }
 
         fun GetMessage(url:String):String?{

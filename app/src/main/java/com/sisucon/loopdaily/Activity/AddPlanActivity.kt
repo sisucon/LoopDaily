@@ -17,7 +17,7 @@ import com.sisucon.loopdaily.Model.ActionModel
 import com.sisucon.loopdaily.Model.PlanDB
 import com.sisucon.loopdaily.R
 import com.sisucon.loopdaily.Util.NetUtil
-import com.sisucon.loopdaily.Util.PlanClassRemote
+import com.sisucon.loopdaily.Util.PlanJsonRemote
 import com.sisucon.loopdaily.Util.PlanJson
 import com.sisucon.loopdaily.Util.Utils
 import com.google.gson.Gson
@@ -70,28 +70,29 @@ class AddPlanActivity : AppCompatActivity(){
              val temp : PlanJson
             if(switch.isChecked){
                 if (Utils.checkEditNotNUll(dayText)&&Utils.checkEditNotNUll(hourText)&&Utils.checkEditNotNUll(minText)){
-                     postJson( PlanJson(nameEdit.text.toString(),switch.isChecked,
+                     postPlan( PlanJson(nameEdit.text.toString(),switch.isChecked,
                          Date((dayText.text.toString().toLong()*1000*60*60*24)+(hourText.text.toString().toLong()*1000*60*60)+(minText.text.toString().toLong()*1000*60)).time,
                          selectDate!!.time,remindButton.isChecked,false))
                 }else{
                     Toasty.error(this,"请填写循环的所有时间").show()
                 }
             }else{
-                postJson(PlanJson(nameEdit.text.toString(),switch.isChecked, 0,
+                postPlan(PlanJson(nameEdit.text.toString(),switch.isChecked, 0,
                     selectDate!!.time,remindButton.isChecked,false))
             }
 
         }
     }
 
-    fun postJson(temp : PlanJson){
+    fun postPlan(temp : PlanJson){
         Thread(Runnable {
-            val reply =  NetUtil.PostMessage(getString(R.string.server_host)+"/plan/createPlan",Gson().toJson(temp))
+            println(Gson().toJson(temp))
+            val reply =  NetUtil.PostClass(getString(R.string.server_host)+"/plan/createPlan",Gson().toJson(temp))
             runOnUiThread {
-                if (reply.result){
+                if (reply!=null){
                     Toasty.success(this,"创建日程成功").show()
-                    println(reply.message)
-                    val remoteJson = Gson().fromJson(reply.message,PlanClassRemote::class.java)
+                    println(reply)
+                    val remoteJson = Gson().fromJson(reply,PlanJsonRemote::class.java)
                     val db = PlanDB(LitePal.count(PlanDB::class.java).toLong(),remoteJson.id,remoteJson.name,remoteJson.userId,remoteJson.isLoop,remoteJson.loopTime,remoteJson.info,remoteJson.startTime,remoteJson.isRemind,remoteJson.isFinish)
                     db.save()
                 }else{
