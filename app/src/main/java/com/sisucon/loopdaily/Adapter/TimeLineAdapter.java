@@ -59,8 +59,13 @@ public class TimeLineAdapter  extends RecyclerView.Adapter<TimeLineViewHolder> {
          holder.timelineView.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
-                Log.d("eventid",""+timeLineModelList.get(position).getEventId());
-                context.startActivity(new Intent(context, ActionEventDetailActivity.class).putExtra("id",""+timeLineModelList.get(position).getEventId()));
+                 if (timeLineModel.getType()==0){
+                     Log.d("eventid",""+timeLineModelList.get(position).getEventId());
+                     context.startActivity(new Intent(context, ActionEventDetailActivity.class).putExtra("id",""+timeLineModelList.get(position).getEventId()));
+                 }else {
+
+                 }
+
              }
          });
         if(timeLineModel.getMstatus() == OrderStatus.INACTIVE) {

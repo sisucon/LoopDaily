@@ -18,7 +18,9 @@ import com.sisucon.loopdaily.lib.MyEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.sisucon.loopdaily.Activity.MainActivity
+import com.sisucon.loopdaily.Model.Userkey
 import es.dmoral.toasty.Toasty
+import org.litepal.LitePal
 
 class RegisterFragment : Fragment(){
     @BindView(R.id.register_phonenum_layout) lateinit var phoneLayout : TextInputLayout
@@ -44,6 +46,8 @@ class RegisterFragment : Fragment(){
                        Thread(Runnable { val reply =  NetUtil.PostUserMessage(getString(R.string.server_host)+"/login",phoneText.text.toString(),passwordText.text.toString())
                            Handler(context!!.mainLooper).post(Runnable {
                                if (reply.result){
+                                   LitePal.deleteAll(Userkey::class.java)
+                                   Userkey(phoneText.text.toString(),passwordText.text.toString()).save()
                                    startActivity(Intent().setClass(activity, MainActivity::class.java))
                                }else{
                                    println(reply.message)

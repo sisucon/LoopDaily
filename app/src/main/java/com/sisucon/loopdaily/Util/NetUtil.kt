@@ -38,7 +38,7 @@ class NetUtil {
             //判断本地是否已存在这个plan,如果有则更新
             var plan = LitePal.where("remoteId = ?",""+it.id).findFirst(PlanDB::class.java)
             if (plan!=null){
-                plan = PlanDB(it)
+                plan.setData(it)
                 plan.save()
             }else{
                 plan =  PlanDB(it)

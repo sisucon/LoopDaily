@@ -3,6 +3,7 @@ package com.sisucon.loopdaily.Fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -134,9 +135,9 @@ class TodayFragment : Fragment() {
 //        }
 
         LitePal.findAll(PlanDB::class.java).forEach {
-            var startDay = Date(it.startTime)
-            if (todayStart.time-startDay.time>0){ //事件开始时间在今天之前*需计算今天是否有事件
-                var tempTime = (todayStart.time-startDay.time)%it.loopTime
+            var startTime = Date(it.startTime)
+            if (todayStart.time-startTime.time>0){ //事件开始时间在今天之前*需计算今天是否有事件
+                var tempTime = (todayStart.time-startTime.time)%it.loopTime
                 var index = 0
                 while ((todayEnd.time-(todayStart.time+tempTime))/it.loopTime>=1){
                     timelinemodelList.add(TimeLineModel(it.name,Date(todayStart.time+tempTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,it.remoteId,1))
@@ -144,15 +145,17 @@ class TodayFragment : Fragment() {
                     index++
                 }
             }else{ //事件开始时间是今天0点之后,需计算是否是今天开始
-                var temp = todayEnd.time - startDay.time
+                var temp = todayEnd.time - startTime.time
                 if (temp>0){
                     var index = 0
-                    timelinemodelList.add(TimeLineModel(it.name,Date(startDay.time),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,it.remoteId,1))
+                    timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,it.remoteId,1))
                     index++
                     while (temp/it.loopTime>=1){
                         temp -= it.loopTime
-                        timelinemodelList.add(TimeLineModel(it.name,Date(startDay.time+it.loopTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,it.remoteId,1))
-                        startDay = Date(startDay.time+it.loopTime)
+                        Log.d("temp",""+temp)
+                        Log.d("id",""+it._id)
+                        timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time+it.loopTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,it.remoteId,1))
+                        startTime = Date(startTime.time+it.loopTime)
                         index++
                     }
                 }

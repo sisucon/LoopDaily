@@ -3,6 +3,7 @@ package com.sisucon.loopdaily.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +33,7 @@ class ActionEventDetailActivity : AppCompatActivity(){
         ButterKnife.bind(this)
         val ra = intent.getStringExtra("id")
         eventId = ra.toLong()
+        Log.d("eventID",""+eventId)
         println(LitePal.findAll(ActionEventDB::class.java))
         eventModel =  LitePal.find(ActionEventDB::class.java, eventId!!)
         initView()

@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     fun initView(){
         setupMenu()
+
         mDrawer = findViewById(R.id.drawerlayout)
         viewPager = findViewById(R.id.main_viewpager)
         viewPager?.adapter = MainViewPagerAdapter(supportFragmentManager)
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
             mMenuFragment = MenuFragment()
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment!!).commit()
         }
+
     }
 
 }

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
 	<dbname value="file"/>
-	<version value="2"/>
+	<version value="3"/>
 	<list>
 		<mapping class="com.sisucon.loopdaily.Model.ActionDB"/>
 		<mapping class="com.sisucon.loopdaily.Model.ActionEventDB"/>
 		<mapping class="com.sisucon.loopdaily.Model.PlanDB"/>
+		<mapping class="com.sisucon.loopdaily.Model.Userkey"/>
+
 	</list>
 </litepal>
 
