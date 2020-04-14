@@ -1,7 +1,11 @@
 package com.sisucon.loopdaily.Activity
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -9,6 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnTouch
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.bigkoo.pickerview.listener.CustomListener
 import com.bigkoo.pickerview.listener.OnTimeSelectListener
@@ -27,7 +32,7 @@ import org.litepal.LitePal
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddPlanActivity : AppCompatActivity(){
+class AddPlanActivity : AppCompatActivity(),View.OnTouchListener{
     @BindView(R.id.plan_name) lateinit var nameEdit :EditText
     @BindView(R.id.plan_loopText) lateinit var loopText : TextView
     @BindView(R.id.plan_loop_bord) lateinit var loopBord : LinearLayout
@@ -52,10 +57,30 @@ class AddPlanActivity : AppCompatActivity(){
         initView()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        if (v is EditText){
+            if (event!!.action == MotionEvent.ACTION_UP){
+                v.setFocusableInTouchMode(true)
+                v.requestFocus()
+                v.selectAll()
+            }
+        }
+        return false
+    }
+
+
+
+    @SuppressLint("ClickableViewAccessibility")
     fun initView() {
+        dayText.setOnTouchListener(this)
+        hourText.setOnTouchListener(this)
+        minText.setOnTouchListener(this)
         switch = findViewById(R.id.plan_switch)
         remindButton = findViewById(R.id.plan_remind_switch)
         timepicker.setOnClickListener {
+            val imm  = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
             pickTime.show()
         }
         switch.setOnCheckedChangeListener { view, isChecked -> if (isChecked){
@@ -69,15 +94,16 @@ class AddPlanActivity : AppCompatActivity(){
         button.setOnClickListener {
              val temp : PlanJson
             if(switch.isChecked){
-                if (Utils.checkEditNotNUll(dayText)&&Utils.checkEditNotNUll(hourText)&&Utils.checkEditNotNUll(minText)){
+                val loopTime = (dayText.text.toString().toLong()*1000*60*60*24)+(hourText.text.toString().toLong()*1000*60*60)+(minText.text.toString().toLong()*1000*60)
+                if (Utils.checkEditNotNUll(dayText)&&Utils.checkEditNotNUll(hourText)&&Utils.checkEditNotNUll(minText)&&loopTime>0){
                      postPlan( PlanJson(nameEdit.text.toString(),switch.isChecked,
-                         Date((dayText.text.toString().toLong()*1000*60*60*24)+(hourText.text.toString().toLong()*1000*60*60)+(minText.text.toString().toLong()*1000*60)).time,
+                         loopTime,
                          selectDate!!.time,remindButton.isChecked,false))
                 }else{
-                    Toasty.error(this,"请填写循环的所有时间").show()
+                    Toasty.error(this,"请正确填写循环的所有时间").show()
                 }
             }else{
-                postPlan(PlanJson(nameEdit.text.toString(),switch.isChecked, 0,
+                postPlan(PlanJson(nameEdit.text.toString(),switch.isChecked, -1,
                     selectDate!!.time,remindButton.isChecked,false))
             }
 
@@ -93,8 +119,9 @@ class AddPlanActivity : AppCompatActivity(){
                     Toasty.success(this,"创建日程成功").show()
                     println(reply)
                     val remoteJson = Gson().fromJson(reply,PlanJsonRemote::class.java)
-                    val db = PlanDB(LitePal.count(PlanDB::class.java).toLong(),remoteJson.id,remoteJson.name,remoteJson.userId,remoteJson.isLoop,remoteJson.loopTime,remoteJson.info,remoteJson.startTime,remoteJson.isRemind,remoteJson.isFinish)
+                    val db = PlanDB(LitePal.count(PlanDB::class.java).toLong(),remoteJson.id,remoteJson.name,remoteJson.userId,remoteJson.isLoop,remoteJson.loopTime,remoteJson.info,remoteJson.startTime,remoteJson.isRemind,remoteJson.isFinish,true)
                     db.save()
+                    this.finish()
                 }else{
                     Toasty.error(this,"创建日程失败").show()
                 }

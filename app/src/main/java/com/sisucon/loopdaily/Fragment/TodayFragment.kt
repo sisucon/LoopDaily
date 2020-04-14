@@ -18,6 +18,7 @@ import com.sisucon.loopdaily.Model.PlanDB
 import com.sisucon.loopdaily.R
 import com.sisucon.loopdaily.lib.OrderStatus
 import com.jude.easyrecyclerview.EasyRecyclerView
+import com.sisucon.loopdaily.Model.PlanEventDB
 import com.sisucon.loopdaily.Util.*
 import org.litepal.LitePal
 import java.util.*
@@ -140,7 +141,9 @@ class TodayFragment : Fragment() {
                 var tempTime = (todayStart.time-startTime.time)%it.loopTime
                 var index = 0
                 while ((todayEnd.time-(todayStart.time+tempTime))/it.loopTime>=1){
-                    timelinemodelList.add(TimeLineModel(it.name,Date(todayStart.time+tempTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,it.remoteId,1))
+                    val planEventDB = PlanEventDB(todayStart.time+startTime.time+it._id,Date(todayStart.time+tempTime),it._id,false,true,Date(it.loopTime),it.name,it.isLoop)
+                    planEventDB.save()
+                    timelinemodelList.add(TimeLineModel(it.name,Date(todayStart.time+tempTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,planEventDB._id,1))
                     tempTime+=it.loopTime
                     index++
                 }
@@ -148,13 +151,16 @@ class TodayFragment : Fragment() {
                 var temp = todayEnd.time - startTime.time
                 if (temp>0){
                     var index = 0
-                    timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,it.remoteId,1))
+                    val planEventDB = PlanEventDB(startTime.time+it._id,Date(startTime.time),it._id,false,true,Date(it.loopTime),it.name,it.isLoop)
+                    planEventDB.save()
+                    timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,planEventDB._id,1))
                     index++
                     while (temp/it.loopTime>=1){
                         temp -= it.loopTime
                         Log.d("temp",""+temp)
                         Log.d("id",""+it._id)
-                        timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time+it.loopTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,it.remoteId,1))
+                        PlanEventDB(startTime.time+it.loopTime+it._id,Date(startTime.time+it.loopTime),it._id,false,true,Date(it.loopTime),it.name,it.isLoop).save()
+                        timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time+it.loopTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,planEventDB._id,1))
                         startTime = Date(startTime.time+it.loopTime)
                         index++
                     }

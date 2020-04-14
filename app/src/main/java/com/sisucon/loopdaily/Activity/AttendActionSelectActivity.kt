@@ -1,8 +1,10 @@
 package com.sisucon.loopdaily.Activity
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -56,6 +58,8 @@ class AttendActionSelectActivity : AppCompatActivity(){
             })
         }).start()
         timepicker.setOnClickListener {
+            val imm  = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
             pickTime.show()
         }
 

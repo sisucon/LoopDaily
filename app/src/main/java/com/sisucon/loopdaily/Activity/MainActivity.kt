@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
 
     fun initView(){
         setupMenu()
-
         mDrawer = findViewById(R.id.drawerlayout)
         viewPager = findViewById(R.id.main_viewpager)
         viewPager?.adapter = MainViewPagerAdapter(supportFragmentManager)

@@ -11,6 +11,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.sisucon.loopdaily.Activity.ActionEventDetailActivity;
+import com.sisucon.loopdaily.Activity.PlanEventDetailActivity;
 import com.sisucon.loopdaily.R;
 import com.sisucon.loopdaily.Util.TimeLineModel;
 import com.sisucon.loopdaily.Util.Utils;
@@ -63,7 +64,7 @@ public class TimeLineAdapter  extends RecyclerView.Adapter<TimeLineViewHolder> {
                      Log.d("eventid",""+timeLineModelList.get(position).getEventId());
                      context.startActivity(new Intent(context, ActionEventDetailActivity.class).putExtra("id",""+timeLineModelList.get(position).getEventId()));
                  }else {
-
+                     context.startActivity(new Intent(context, PlanEventDetailActivity.class).putExtra("id",""+timeLineModelList.get(position).getEventId()));
                  }
 
              }

@@ -57,6 +57,7 @@ class LoginFragment : androidx.fragment.app.Fragment(){
                     Userkey(username,password).save()
                     startActivity(Intent().setClass(activity,MainActivity::class.java))
                     Toasty.success(context!!,"登录成功").show()
+                    activity!!.finish()
                 }else{
                     println(reply!!.message)
                     Toasty.error(context!!, reply!!.message).show()

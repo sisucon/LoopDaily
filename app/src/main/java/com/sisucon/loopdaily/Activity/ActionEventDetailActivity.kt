@@ -34,14 +34,13 @@ class ActionEventDetailActivity : AppCompatActivity(){
         val ra = intent.getStringExtra("id")
         eventId = ra.toLong()
         Log.d("eventID",""+eventId)
-        println(LitePal.findAll(ActionEventDB::class.java))
         eventModel =  LitePal.find(ActionEventDB::class.java, eventId!!)
         initView()
     }
 
     fun initView(){
         Thread(Runnable {
-            var action = Gson().fromJson<ActionModel>(
+            val action = Gson().fromJson<ActionModel>(
                 NetUtil.GetMessage(getString(R.string.server_host)+"/action/getAction/"+eventModel.remoteId),
                 ActionModel::class.java)
             Handler(this.mainLooper).post(Runnable {
