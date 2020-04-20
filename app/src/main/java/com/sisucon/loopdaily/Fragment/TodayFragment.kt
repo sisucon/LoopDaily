@@ -157,9 +157,6 @@ class TodayFragment : Fragment() {
                     index++
                     while (temp/it.loopTime>=1){
                         temp -= it.loopTime
-                        Log.d("temp",""+temp)
-                        Log.d("id",""+it._id)
-                        PlanEventDB(startTime.time+it.loopTime+it._id,Date(startTime.time+it.loopTime),it._id,false,true,Date(it.loopTime),it.name,it.isLoop).save()
                         timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time+it.loopTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,planEventDB._id,1))
                         startTime = Date(startTime.time+it.loopTime)
                         index++

@@ -22,15 +22,15 @@
 			android:background="@drawable/box_pad"
 			android:text="完成"/>
 
-	<!--<TextView-->
-		<!--android:id="@+id/event_change"-->
-		<!--android:layout_marginTop="70dp"-->
-		<!--android:layout_gravity="center"-->
-		<!--android:textColor="#ffff"-->
-		<!--android:textSize="17sp"-->
-		<!--android:layout_width="wrap_content" android:layout_height="wrap_content"-->
-		<!--android:background="@drawable/box_pad_blue"-->
-		<!--android:text="更改"/>-->
+	<TextView
+		android:id="@+id/event_change"
+		android:layout_marginTop="70dp"
+		android:layout_gravity="center"
+		android:textColor="#ffff"
+		android:textSize="17sp"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:background="@drawable/box_pad_blue"
+		android:text="更改"/>
 
 	<TextView
 			android:id="@+id/event_delete"

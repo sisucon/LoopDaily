@@ -26,6 +26,7 @@ import com.sisucon.loopdaily.Util.PlanJsonRemote
 import com.sisucon.loopdaily.Util.PlanJson
 import com.sisucon.loopdaily.Util.Utils
 import com.google.gson.Gson
+import com.sisucon.loopdaily.Model.PlanEventDB
 import com.suke.widget.SwitchButton
 import es.dmoral.toasty.Toasty
 import org.litepal.LitePal
@@ -44,14 +45,16 @@ class AddPlanActivity : AppCompatActivity(),View.OnTouchListener{
      lateinit var remindButton : SwitchButton
     lateinit var  id : String
     lateinit var switch : SwitchButton
-
+     var planDB : PlanDB? = null
     var selectDate : Date? = null
-    lateinit var action: ActionModel
     lateinit var pickTime : TimePickerView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_plan_layout)
+        val planId = intent.getLongExtra("planId",-1)
+        if (planId>=0){
+            planDB = LitePal.find(PlanDB::class.java,planId)
+        }
         ButterKnife.bind(this)
         initTimePicker()
         initView()
@@ -71,7 +74,7 @@ class AddPlanActivity : AppCompatActivity(),View.OnTouchListener{
 
 
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     fun initView() {
         dayText.setOnTouchListener(this)
         hourText.setOnTouchListener(this)
@@ -91,23 +94,64 @@ class AddPlanActivity : AppCompatActivity(),View.OnTouchListener{
             loopBord.visibility = View.GONE
         }
         }
+
+
+        if (planDB!=null){
+            dayText.setText(""+planDB!!.loopTime/(1000*60*60*24))
+            hourText.setText(""+planDB!!.loopTime/(1000*60*60))
+            minText.setText(""+planDB!!.loopTime/(1000*60))
+            nameEdit.setText(planDB!!.name)
+        }
+
+
         button.setOnClickListener {
              val temp : PlanJson
             if(switch.isChecked){
                 val loopTime = (dayText.text.toString().toLong()*1000*60*60*24)+(hourText.text.toString().toLong()*1000*60*60)+(minText.text.toString().toLong()*1000*60)
                 if (Utils.checkEditNotNUll(dayText)&&Utils.checkEditNotNUll(hourText)&&Utils.checkEditNotNUll(minText)&&loopTime>0){
-                     postPlan( PlanJson(nameEdit.text.toString(),switch.isChecked,
-                         loopTime,
-                         selectDate!!.time,remindButton.isChecked,false))
+                    if (planDB==null){
+                        postPlan( PlanJson(nameEdit.text.toString(),switch.isChecked,
+                            loopTime,
+                            selectDate!!.time,remindButton.isChecked,false,null))
+                    }else{
+                        udpatePlan(PlanJson(nameEdit.text.toString(),switch.isChecked,
+                            loopTime,
+                            selectDate!!.time,remindButton.isChecked,false,planDB!!.remoteId))
+                    }
+
                 }else{
                     Toasty.error(this,"请正确填写循环的所有时间").show()
                 }
             }else{
-                postPlan(PlanJson(nameEdit.text.toString(),switch.isChecked, -1,
-                    selectDate!!.time,remindButton.isChecked,false))
+               if (planDB==null){
+                   postPlan(PlanJson(nameEdit.text.toString(),switch.isChecked, -1,
+                       selectDate!!.time,remindButton.isChecked,false,null))
+               }else{
+                   udpatePlan(PlanJson(nameEdit.text.toString(),switch.isChecked, -1,
+                       selectDate!!.time,remindButton.isChecked,false,planDB!!.remoteId))
+               }
             }
-
         }
+    }
+
+    fun udpatePlan(temp: PlanJson){
+        Thread(Runnable {
+            println(Gson().toJson(temp))
+            val reply =  NetUtil.PostClass(getString(R.string.server_host)+"/plan/updatePlan",Gson().toJson(temp))
+            runOnUiThread {
+                if (reply!=null){
+                    Toasty.success(this,"修改日程成功").show()
+                    println(reply)
+                    LitePal.deleteAll(PlanEventDB::class.java,"planId = ?",""+planDB!!._id)
+                    val remoteJson = Gson().fromJson(reply,PlanJsonRemote::class.java)
+                    val db = PlanDB(planDB!!._id,remoteJson.id,remoteJson.name,remoteJson.userId,remoteJson.isLoop,remoteJson.loopTime,remoteJson.info,remoteJson.startTime,remoteJson.isRemind,remoteJson.isFinish,true)
+                    db.save()
+                    this.finish()
+                }else{
+                    Toasty.error(this,"修改日程失败").show()
+                }
+            }
+        }).start()
     }
 
     fun postPlan(temp : PlanJson){
