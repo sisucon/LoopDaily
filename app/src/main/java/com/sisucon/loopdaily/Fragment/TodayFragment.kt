@@ -26,8 +26,6 @@ import kotlin.collections.ArrayList
 
 
 class TodayFragment : Fragment() {
-
-
     lateinit var recyclerView: EasyRecyclerView
     lateinit var rootView:View
     lateinit var timeLineAdapter: TimeLineAdapter
@@ -91,7 +89,9 @@ class TodayFragment : Fragment() {
                 val eventList = LitePal.where("startDay = ? and actionId = ?",""+Utils.getStartTime().time,""+it._id).find(ActionEventDB::class.java)
                 if (eventList.size>0){
                     for (event in eventList){
-                        timelinemodelList.add(TimeLineModel(it.name,event.time,if (event.isSuccess)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it.remoteId,event._id,0))
+                        if (!event.isDeleted){
+                            timelinemodelList.add(TimeLineModel(it.name,event.time,if (event.isSuccess)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it.remoteId,event._id,0))
+                        }
                     }
                 }else{
                     if (todayStart.time-startDay.time>0){ //事件开始时间在今天之前*需计算今天是否有事件
@@ -126,15 +126,6 @@ class TodayFragment : Fragment() {
     }
 
     private fun createPlanTimeLine(){
-//        if (LitePal.count(PlanDB::class.java)>0){
-//            val timeUtil = TimeUtil()
-//            LitePal.findAll(PlanDB::class.java).forEach {
-//                if (timeUtil.isToday(it.startTime)){
-//                    timelinemodelList.add(TimeLineModel(it.name,Date(it.startTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,it.remoteId,1))
-//                }
-//            }
-//        }
-
         LitePal.findAll(PlanDB::class.java).forEach {
             var startTime = Date(it.startTime)
             if (todayStart.time-startTime.time>0){ //事件开始时间在今天之前*需计算今天是否有事件

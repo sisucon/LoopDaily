@@ -54,10 +54,12 @@ class ActionEventDetailActivity : AppCompatActivity(){
             Toasty.success(this,"完成").show()
         }
         deleteBtn.setOnClickListener {
-            LitePal.delete(ActionDB::class.java,eventModel.actionId)
-            LitePal.deleteAll(ActionEventDB::class.java,"startDay = ? and actionId = ?",""+eventModel.startDay.time,""+eventModel.actionId)
+//            LitePal.delete(ActionDB::class.java,eventModel.actionId)
+//            LitePal.deleteAll(ActionEventDB::class.java,"startDay = ? and actionId = ?",""+eventModel.startDay.time,""+eventModel.actionId)
+            eventModel.isDeleted = true
+            eventModel.save()
             Toasty.success(this,"删除成功").show()
-
+            this.finish()
         }
         changeBtn.setOnClickListener {
             startActivity(            Intent(this,ChangeSelectActivity::class.java).putExtra("id",""+eventModel._id))

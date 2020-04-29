@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
 	<dbname value="loopDb"/>
-	<version value="5"/>
+	<version value="6"/>
 	<list>
 		<mapping class="com.sisucon.loopdaily.Model.ActionDB"/>
 		<mapping class="com.sisucon.loopdaily.Model.ActionEventDB"/>

@@ -1,9 +1,12 @@
 package com.sisucon.loopdaily.Activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -26,7 +29,7 @@ import org.litepal.LitePal
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AttendActionSelectActivity : AppCompatActivity(){
+class AttendActionSelectActivity : AppCompatActivity(),View.OnTouchListener{
     @BindView(R.id.select_action_img) lateinit var img : ImageView
     @BindView(R.id.select_day) lateinit var dayText:EditText
     @BindView(R.id.select_hour) lateinit var hourText:EditText
@@ -47,7 +50,11 @@ class AttendActionSelectActivity : AppCompatActivity(){
         id = intent.getStringExtra("id")
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     fun initView(){
+        dayText.setOnTouchListener(this)
+        hourText.setOnTouchListener(this)
+        minText.setOnTouchListener(this)
         Thread(Runnable {
             action = Gson().fromJson<ActionModel>(
                 NetUtil.GetMessage(getString(R.string.server_host)+"/action/getAction/"+id),
@@ -73,14 +80,29 @@ class AttendActionSelectActivity : AppCompatActivity(){
                 val actionDB = ActionDB(LitePal.count(ActionDB::class.java).toLong(),action.name, selectDate!!,loopTime.time,action.type,true,getString(R.string.server_host_file)+"/upload/actionDefault/"+action.id+"/"+action.imageName
                     ,action.id)
                 if (actionDB.save()){
-                    Toasty.success(this,"成功").show()
+                    Toasty.success(this,"参加成功").show()
+                    this.finish()
                 }else{
-                    Toasty.error(this,"失败").show()
+                    Toasty.error(this,"参加失败").show()
                 }
 
             }
         }
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        if (v is EditText){
+            if (event!!.action == MotionEvent.ACTION_UP){
+                v.setFocusableInTouchMode(true)
+                v.requestFocus()
+                v.selectAll()
+            }
+        }
+        return false
+    }
+
+
 
     fun initTimePicker(){
         pickTime = TimePickerBuilder(this, OnTimeSelectListener { date, v -> timepicker.text=getTime(date)

@@ -48,7 +48,7 @@ class RegisterFragment : Fragment(){
                                if (reply.result){
                                    LitePal.deleteAll(Userkey::class.java)
                                    Userkey(phoneText.text.toString(),passwordText.text.toString()).save()
-                                   startActivity(Intent().setClass(activity, MainActivity::class.java))
+                                   startActivity(Intent().setClass(activity!!, MainActivity::class.java))
                                }else{
                                    println(reply.message)
                                    Toasty.error(context!!, reply.message).show()

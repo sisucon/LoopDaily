@@ -55,7 +55,7 @@ class LoginFragment : androidx.fragment.app.Fragment(){
                 if (reply?.result!!){
                     LitePal.deleteAll(Userkey::class.java)
                     Userkey(username,password).save()
-                    startActivity(Intent().setClass(activity,MainActivity::class.java))
+                    startActivity(Intent().setClass(activity!!,MainActivity::class.java))
                     Toasty.success(context!!,"登录成功").show()
                     activity!!.finish()
                 }else{

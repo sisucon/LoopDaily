@@ -50,6 +50,7 @@ class PlanEventDetailActivity : AppCompatActivity(){
                     LitePal.deleteAll(PlanEventDB::class.java,"planId = ?",""+localPlan._id)
                     localPlan.delete()
                     Toasty.success(this,"删除日程成功").show()
+                    this.finish()
                 })
             }).start()
         }

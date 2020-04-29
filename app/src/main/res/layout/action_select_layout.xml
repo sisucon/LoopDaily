@@ -27,13 +27,16 @@
 	<LinearLayout android:layout_gravity="center" android:layout_marginTop="10dp"
 			android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
 		<EditText android:text="0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="17sp"
-	android:inputType="number"	android:id="@+id/select_day"/><TextView android:layout_width="wrap_content" android:textSize="17sp"
+	android:inputType="number" android:focusable="true"
+				  android:selectAllOnFocus="true"	android:id="@+id/select_day"/><TextView android:layout_width="wrap_content" android:textSize="17sp"
 												android:layout_height="wrap_content" android:text="天"
-	android:textColor="@color/normalColor"/><EditText android:inputType="number" android:text="0" android:textSize="17sp" android:layout_width="wrap_content" android:layout_height="wrap_content"
+	android:textColor="@color/normalColor"/><EditText android:inputType="number"  android:focusable="true"
+													  android:selectAllOnFocus="true" android:text="0" android:textSize="17sp" android:layout_width="wrap_content" android:layout_height="wrap_content"
 													  android:id="@+id/select_hour"/><TextView android:textSize="17sp" android:layout_width="wrap_content"
 																							  android:layout_height="wrap_content" android:text="小时"
 																							  android:textColor="@color/normalColor"/>
-		<EditText android:inputType="number" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="17sp"
+		<EditText android:inputType="number"  android:focusable="true"
+				  android:selectAllOnFocus="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="17sp"
 				  android:id="@+id/select_min"/><TextView android:textSize="17sp" android:layout_width="wrap_content"
 														  android:layout_height="wrap_content" android:text="分钟"
 														  android:textColor="@color/normalColor"/>
