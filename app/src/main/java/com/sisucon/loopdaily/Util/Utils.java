@@ -6,11 +6,8 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.widget.EditText;
 import android.widget.ImageView;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import com.bumptech.glide.Glide;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,7 +19,6 @@ public class Utils {
     private Context context;
     @SuppressLint("StaticFieldLeak")
     private static Utils utils;
-    private DisplayImageOptions options;
     public  static Utils getInstance(Context context){
         if (utils==null){
             utils = new Utils(context);
@@ -31,30 +27,19 @@ public class Utils {
     }
     public Utils(Context context){
         this.context = context;
-        initImageLoader();
     }
     static DateFormat LESSIONDF = new SimpleDateFormat("hh:mm a, dd-MMM-yyyy");
     public static String DateToLessionType(Date date){return LESSIONDF.format(date);}
-    /***
-     * 初始化ImageLoader
-     */
-    private void initImageLoader() {
-        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(context).memoryCacheExtraOptions(2000, 2000)
-                .memoryCacheSize(2 * 1024 * 1024).threadPoolSize(3).threadPriority(1000).diskCache(new UnlimitedDiskCache(context.getExternalCacheDir())).diskCacheFileCount(100).diskCacheFileNameGenerator(new Md5FileNameGenerator())
-                .diskCacheSize(50 * 1024 * 1024).build();
-        ImageLoader.getInstance().init(configuration);
-        options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).build();
-    }
 
     /***
      * 获取到指定url图片,设置到imageview
      * @param
      * @param imageView
      */
-    public void GetImg(String url, final ImageView imageView) {
+    public void GetImg(String url, ImageView imageView,Context context) {
         try {
             url = url.trim();
-            ImageLoader.getInstance().displayImage(url, imageView, options);
+            Glide.with(context).load(url).into(imageView);
         } catch (Exception e) {
         }
     }

@@ -60,7 +60,7 @@ class AttendActionSelectActivity : AppCompatActivity(),View.OnTouchListener{
                 NetUtil.GetMessage(getString(R.string.server_host)+"/action/getAction/"+id),
                 ActionModel::class.java)
             Handler(this.mainLooper).post(Runnable {
-                Utils.getInstance(this).GetImg(getString(R.string.server_host_file)+"/upload/actionDefault/"+id+"/"+action.imageName,img)
+                Utils.getInstance(this).GetImg(getString(R.string.server_host_file)+"/upload/actionDefault/"+id+"/"+action.imageName,img,this)
                 name.text = action.name
             })
         }).start()

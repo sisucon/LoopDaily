@@ -47,7 +47,7 @@ class MyPageFragment : Fragment(){
         val severUserModel = Gson().fromJson<ServerUserModel>(NetUtil.GetMessage(getString(R.string.server_host)+"/user/myInfo"), ServerUserModel::class.java)
         Handler(context?.mainLooper).post(Runnable {
             username.text = severUserModel.userName
-            Utils.getInstance(context).GetImg(getString(R.string.server_host_file)+"/upload/avator/"+severUserModel.userName+"/"+severUserModel.avatorFileName,imageView)
+            Utils.getInstance(context).GetImg(getString(R.string.server_host_file)+"/upload/avator/"+severUserModel.userName+"/"+severUserModel.avatorFileName,imageView,activity)
         })
     }).start()
 }

@@ -55,7 +55,7 @@ class ChangeSelectActivity : AppCompatActivity(){
                 NetUtil.GetMessage(getString(R.string.server_host)+"/action/getAction/"+actionEventDB.remoteId),
                 ActionModel::class.java)
             Handler(this.mainLooper).post(Runnable {
-                Utils.getInstance(this).GetImg(getString(R.string.server_host_file)+"/upload/actionDefault/"+actionEventDB.remoteId+"/"+action.imageName,img)
+                Utils.getInstance(this).GetImg(getString(R.string.server_host_file)+"/upload/actionDefault/"+actionEventDB.remoteId+"/"+action.imageName,img,this)
                 name.text = action.name
             })
         }).start()

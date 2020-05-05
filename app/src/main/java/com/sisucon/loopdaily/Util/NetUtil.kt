@@ -1,13 +1,11 @@
 package com.sisucon.loopdaily.Util
 
-import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.sisucon.loopdaily.Activity.MainActivity
 import com.sisucon.loopdaily.Model.PlanDB
-import com.sisucon.loopdaily.R
 import okhttp3.*
 import org.litepal.LitePal
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 class NetUtil {
@@ -60,6 +58,17 @@ class NetUtil {
         fun PostClass(url: String,json: String):String?{
             val okHttp = CreateOkHttpClient(url)
             val requestBody:RequestBody = FormBody.create(MediaType.parse("application/json"),json)
+            val request : Request = Request.Builder().url(url).post(requestBody).build()
+            val response : Response = okHttp.newCall(request).execute()
+            return response.body()?.string()
+        }
+
+        fun PostFile(url: String,file:File):String?{
+            val okHttp = CreateOkHttpClient(url)
+            val fileBody:RequestBody = FormBody.create(MediaType.parse("image/*"),file)
+            val requestBody: RequestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM).addFormDataPart("file", file.name + "", fileBody)
+                .build()
             val request : Request = Request.Builder().url(url).post(requestBody).build()
             val response : Response = okHttp.newCall(request).execute()
             return response.body()?.string()
