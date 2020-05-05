@@ -1,5 +1,6 @@
 package com.sisucon.loopdaily.Activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -59,6 +60,7 @@ class ActionEventDetailActivity : AppCompatActivity(){
             eventModel.isDeleted = true
             eventModel.save()
             Toasty.success(this,"删除成功").show()
+            this.setResult(Activity.RESULT_OK)
             this.finish()
         }
         changeBtn.setOnClickListener {

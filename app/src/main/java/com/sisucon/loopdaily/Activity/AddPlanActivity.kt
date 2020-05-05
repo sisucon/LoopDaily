@@ -144,7 +144,7 @@ class AddPlanActivity : AppCompatActivity(),View.OnTouchListener{
                     println(reply)
                     LitePal.deleteAll(PlanEventDB::class.java,"planId = ?",""+planDB!!._id)
                     val remoteJson = Gson().fromJson(reply,PlanJsonRemote::class.java)
-                    val db = PlanDB(planDB!!._id,remoteJson.id,remoteJson.name,remoteJson.userId,remoteJson.isLoop,remoteJson.loopTime,remoteJson.info,remoteJson.startTime,remoteJson.isRemind,remoteJson.isFinish,true)
+                    val db = PlanDB(planDB!!._id,remoteJson.id,remoteJson.name,remoteJson.userId,remoteJson.loop,remoteJson.loopTime,remoteJson.info,remoteJson.startTime,remoteJson.remind,remoteJson.finish,true)
                     db.save()
                     this.finish()
                 }else{
@@ -163,8 +163,9 @@ class AddPlanActivity : AppCompatActivity(),View.OnTouchListener{
                     Toasty.success(this,"创建日程成功").show()
                     println(reply)
                     val remoteJson = Gson().fromJson(reply,PlanJsonRemote::class.java)
-                    val db = PlanDB(LitePal.count(PlanDB::class.java).toLong(),remoteJson.id,remoteJson.name,remoteJson.userId,remoteJson.isLoop,remoteJson.loopTime,remoteJson.info,remoteJson.startTime,remoteJson.isRemind,remoteJson.isFinish,true)
+                    val db = PlanDB(LitePal.count(PlanDB::class.java).toLong(),remoteJson.id,remoteJson.name,remoteJson.userId,remoteJson.loop,remoteJson.loopTime,remoteJson.info,remoteJson.startTime,remoteJson.remind,remoteJson.finish,true)
                     db.save()
+                    setResult(0)
                     this.finish()
                 }else{
                     Toasty.error(this,"创建日程失败").show()

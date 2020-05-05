@@ -1,5 +1,6 @@
 package com.sisucon.loopdaily.Activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -50,6 +51,7 @@ class PlanEventDetailActivity : AppCompatActivity(){
                     LitePal.deleteAll(PlanEventDB::class.java,"planId = ?",""+localPlan._id)
                     localPlan.delete()
                     Toasty.success(this,"删除日程成功").show()
+                    this.setResult(Activity.RESULT_OK)
                     this.finish()
                 })
             }).start()

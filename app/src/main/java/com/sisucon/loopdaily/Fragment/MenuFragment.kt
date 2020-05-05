@@ -1,7 +1,11 @@
 package com.sisucon.loopdaily.Fragment
 
+import android.app.Activity.NOTIFICATION_SERVICE
 import android.app.Activity.RESULT_OK
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.icu.text.SimpleDateFormat
@@ -9,11 +13,13 @@ import android.net.Uri
 import android.os.*
 import android.os.StrictMode.VmPolicy
 import android.provider.MediaStore
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.FileProvider
 import androidx.core.os.EnvironmentCompat
 import androidx.fragment.app.Fragment
@@ -50,6 +56,10 @@ class MenuFragment : Fragment() {
         initView()
         return rootView
     }
+
+
+
+
 
     fun initView(){
         userAvator = vNavigation?.getHeaderView(0)!!.findViewById(R.id.left_view_userimg)

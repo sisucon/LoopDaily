@@ -83,6 +83,16 @@ public class Utils {
                 .get(Calendar.DAY_OF_MONTH);
     }
 
+    public static int[] createTimeArray(long time){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(time));
+        int[] temp = new int[3];
+        temp[0] = calendar.get(Calendar.HOUR_OF_DAY);
+        temp[1] = calendar.get(Calendar.MINUTE);
+        temp[2] = calendar.get(Calendar.SECOND);
+        return temp;
+    }
+
     public static Date getStartTime(){
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DAY_OF_MONTH,0);

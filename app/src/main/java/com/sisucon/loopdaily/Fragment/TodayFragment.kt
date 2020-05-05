@@ -1,25 +1,40 @@
 package com.sisucon.loopdaily.Fragment
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jude.easyrecyclerview.EasyRecyclerView
 import com.sisucon.loopdaily.Activity.AddPlanActivity
 import com.sisucon.loopdaily.Adapter.TimeLineAdapter
 import com.sisucon.loopdaily.Model.ActionDB
 import com.sisucon.loopdaily.Model.ActionEventDB
 import com.sisucon.loopdaily.Model.PlanDB
-import com.sisucon.loopdaily.R
-import com.sisucon.loopdaily.lib.OrderStatus
-import com.jude.easyrecyclerview.EasyRecyclerView
 import com.sisucon.loopdaily.Model.PlanEventDB
-import com.sisucon.loopdaily.Util.*
+import com.sisucon.loopdaily.R
+import com.sisucon.loopdaily.Service.AlarmService
+import com.sisucon.loopdaily.Util.ActionClassModel
+import com.sisucon.loopdaily.Util.NetUtil
+import com.sisucon.loopdaily.Util.TimeLineModel
+import com.sisucon.loopdaily.Util.Utils
+import com.sisucon.loopdaily.lib.AlarmManagerUtils
+import com.sisucon.loopdaily.lib.GlobalValues
+import com.sisucon.loopdaily.lib.OrderStatus
+import es.dmoral.toasty.Toasty
 import org.litepal.LitePal
 import java.util.*
 import kotlin.collections.ArrayList
@@ -35,20 +50,92 @@ class TodayFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
        rootView = inflater.inflate(R.layout.today_fragment_layout,container,false)
         initView()
+        checkPushSwitchStatus()
+        notificationTest()
         return rootView
     }
 
+    fun notificationTest(){
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+            val channelId = "notification"
+            val channalName = "活动提醒"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            createNotificationChannel(channelId,channalName,importance)
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createNotificationChannel(channelId:String, channelName:String, importance:Int){
+        val channel = NotificationChannel(channelId,channelName,importance)
+        val notifitacionManager = activity!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notifitacionManager.createNotificationChannel(channel)
+    }
+
+    fun sendNotificationMsg(channelTitle:String, channelText:String,time:Long,index:Int) {
+//        val alarm =
+//            context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val myIntent = Intent()
+//        myIntent.action =  GlobalValues.TIMER_ACTION
+//        myIntent.putExtra("channelTitle",channelTitle)
+//        myIntent.putExtra("channelText",channelText)
+//        val sender = PendingIntent.getBroadcast(context, index, myIntent, 0)
+        val temp = Utils.createTimeArray(time)
+        AlarmManagerUtils.setAlarm(activity,0,temp[0],temp[1],temp[2],temp[0]*60*60+temp[1]*60+temp[2],0,channelText,2)
+    }
+
+
+
+    private fun checkPushSwitchStatus() {
+        val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(activity!!);
+        val isOpend = notificationManager.areNotificationsEnabled()
+        if (isOpend) {
+            Toasty.success(activity!!,"通知已打开").show()
+        } else {
+            val intent: Intent = Intent()
+            try {
+                //8.0及以后版本使用这两个extra.  >=API 26
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, activity!!.packageName)
+                    intent.putExtra(Settings.EXTRA_CHANNEL_ID, activity!!.applicationInfo.uid)
+
+                }
+                else{
+                    //5.0-7.1 使用这两个extra.  <= API 25, >=API 21
+                    intent.putExtra("app_package", activity!!.packageName)
+                    intent.putExtra("app_uid", activity!!.applicationInfo.uid)
+                }
+                startActivity(intent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                //其他低版本或者异常情况，走该节点。进入APP设置界面
+                intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                intent.putExtra("package",activity!!.packageName)
+                //val uri = Uri.fromParts("package", packageName, null)
+                //intent.data = uri
+                startActivity(intent)
+            }
+        }
+
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        setData()
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 
     @SuppressLint("WrongConstant")
     fun initView(){
         addButton = rootView.findViewById(R.id.today_add_button)
         addButton.setOnClickListener {
-            startActivity(Intent(activity,AddPlanActivity::class.java))
+            startActivityForResult(Intent(activity,AddPlanActivity::class.java),0)
         }
         recyclerView = rootView.findViewById(R.id.today_recyclerView)
         recyclerView.setLayoutManager( LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false))
         timelinemodelList = ArrayList()
-        timeLineAdapter = TimeLineAdapter(timelinemodelList,false,null)
+        timeLineAdapter = TimeLineAdapter(timelinemodelList,false,null,this)
         recyclerView.adapter = timeLineAdapter
         setData()
         //设置刷新监听器
@@ -56,6 +143,7 @@ class TodayFragment : Fragment() {
             timelinemodelList.clear()
             timeLineAdapter.notifyDataSetChanged()
             setData()
+            notificationTest()
             recyclerView.setRefreshing(false)
         }
     }
@@ -63,11 +151,13 @@ class TodayFragment : Fragment() {
     fun syncDate(){
             NetUtil.getPlanDB(getString(R.string.server_host)+"/plan/getPlan")
     }
-
+    var notificationSum = 0
     private val todayStart = Utils.getStartTime()
     private val todayEnd = Utils.getEndTime()
-    private fun setData(){
+     fun setData(){
         timelinemodelList.clear()
+        timeLineAdapter.notifyDataSetChanged()
+        notificationSum = 0
             Thread(Runnable {
                 syncDate()
                 createActionTimeLine()
@@ -81,7 +171,6 @@ class TodayFragment : Fragment() {
             }).start()
     }
 
-
     private fun createActionTimeLine(){
         if(LitePal.count(ActionDB::class.java)>0){
             LitePal.findAll(ActionDB::class.java).forEach {
@@ -91,6 +180,7 @@ class TodayFragment : Fragment() {
                     for (event in eventList){
                         if (!event.isDeleted){
                             timelinemodelList.add(TimeLineModel(it.name,event.time,if (event.isSuccess)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it.remoteId,event._id,0))
+                            sendNotificationMsg("提醒","该"+it.name+"了",event.time.time,timelinemodelList.size)
                         }
                     }
                 }else{
@@ -101,6 +191,8 @@ class TodayFragment : Fragment() {
                             val temp =  ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it._id,it.remoteId,false,Date(todayStart.time+tempTime))
                             temp.save()
                             timelinemodelList.add(TimeLineModel(it.name,Date(todayStart.time+tempTime),OrderStatus.INACTIVE,"",it._id,temp._id,0))
+                            sendNotificationMsg("提醒","该"+it.name+"了",Date(todayStart.time+tempTime).time,notificationSum++)
+
                             tempTime+=it.loopTime
                             index++
                         }
@@ -110,12 +202,14 @@ class TodayFragment : Fragment() {
                         val tempd = ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it._id,it.remoteId,false,Date(startDay.time))
                         tempd.save()
                         timelinemodelList.add(TimeLineModel(it.name,Date(startDay.time+it.loopTime),OrderStatus.INACTIVE,"",it._id,tempd._id,0))
+                        sendNotificationMsg("提醒","该"+it.name+"了",Date(startDay.time+it.loopTime).time,notificationSum++)
                         index++
                         while (temp/it.loopTime>=1){
                             temp -= it.loopTime
                             val tempd = ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it._id,it.remoteId,false,Date(startDay.time+it.loopTime))
                             tempd.save()
                             timelinemodelList.add(TimeLineModel(it.name,Date(startDay.time+it.loopTime),OrderStatus.INACTIVE,"",it._id,tempd._id,0))
+                            sendNotificationMsg("提醒","该"+it.name+"了",Date(startDay.time+it.loopTime).time,notificationSum++)
                             startDay = Date(startDay.time+it.loopTime)
                             index++
                         }
@@ -135,6 +229,10 @@ class TodayFragment : Fragment() {
                     val planEventDB = PlanEventDB(todayStart.time+startTime.time+it._id,Date(todayStart.time+tempTime),it._id,false,true,Date(it.loopTime),it.name,it.isLoop)
                     planEventDB.save()
                     timelinemodelList.add(TimeLineModel(it.name,Date(todayStart.time+tempTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,planEventDB._id,1))
+                    if (it.isRemind)
+                    {
+                        sendNotificationMsg("提醒","该"+it.name+"了",Date(todayStart.time+tempTime).time,notificationSum++)
+                    }
                     tempTime+=it.loopTime
                     index++
                 }
@@ -145,10 +243,19 @@ class TodayFragment : Fragment() {
                     val planEventDB = PlanEventDB(startTime.time+it._id,Date(startTime.time),it._id,false,true,Date(it.loopTime),it.name,it.isLoop)
                     planEventDB.save()
                     timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,planEventDB._id,1))
+                    if (it.isRemind)
+                    {
+                        sendNotificationMsg("提醒","该"+it.name+"了",Date(startTime.time).time,notificationSum++)
+                    }
                     index++
                     while (temp/it.loopTime>=1){
                         temp -= it.loopTime
                         timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time+it.loopTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,planEventDB._id,1))
+                        if (it.isRemind)
+                        {
+                            sendNotificationMsg("提醒","该"+it.name+"了",Date(startTime.time+it.loopTime).time,notificationSum++)
+
+                        }
                         startTime = Date(startTime.time+it.loopTime)
                         index++
                     }

@@ -10,10 +10,10 @@ data class PlanJsonRemote (
     var id:Long ,
     var name:String,
     var userId : Long,
-    var isLoop:Boolean,
+    var loop:Boolean,
     var loopTime:Long,
     var info : String="" ,
     var startTime : Long
-    ,var isRemind : Boolean
-    ,var isFinish:Boolean
+    ,var remind : Boolean
+    ,var finish:Boolean
 )
