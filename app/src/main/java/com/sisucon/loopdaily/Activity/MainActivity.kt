@@ -2,6 +2,7 @@ package com.sisucon.loopdaily.Activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.annotation.Nullable
 import androidx.fragment.app.FragmentManager
 import com.sisucon.loopdaily.Adapter.MainViewPagerAdapter
@@ -48,7 +49,17 @@ class MainActivity : AppCompatActivity() {
             mMenuFragment = MenuFragment()
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment!!).commit()
         }
-
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode==KeyEvent.KEYCODE_BACK){
+            moveTaskToBack(true)
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onBackPressed() {
+        moveTaskToBack(true)
+    }
 }

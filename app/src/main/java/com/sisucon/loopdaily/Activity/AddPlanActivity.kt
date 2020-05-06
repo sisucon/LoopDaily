@@ -13,12 +13,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
-import butterknife.OnTouch
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.bigkoo.pickerview.listener.CustomListener
 import com.bigkoo.pickerview.listener.OnTimeSelectListener
 import com.bigkoo.pickerview.view.TimePickerView
-import com.sisucon.loopdaily.Model.ActionModel
 import com.sisucon.loopdaily.Model.PlanDB
 import com.sisucon.loopdaily.R
 import com.sisucon.loopdaily.Util.NetUtil
@@ -142,9 +140,9 @@ class AddPlanActivity : AppCompatActivity(),View.OnTouchListener{
                 if (reply!=null){
                     Toasty.success(this,"修改日程成功").show()
                     println(reply)
-                    LitePal.deleteAll(PlanEventDB::class.java,"planId = ?",""+planDB!!._id)
+                    LitePal.deleteAll(PlanEventDB::class.java,"planId = ?",""+planDB!!.id)
                     val remoteJson = Gson().fromJson(reply,PlanJsonRemote::class.java)
-                    val db = PlanDB(planDB!!._id,remoteJson.id,remoteJson.name,remoteJson.userId,remoteJson.loop,remoteJson.loopTime,remoteJson.info,remoteJson.startTime,remoteJson.remind,remoteJson.finish,true)
+                    val db = PlanDB(planDB!!.id,remoteJson.id,remoteJson.name,remoteJson.userId,remoteJson.loop,remoteJson.loopTime,remoteJson.info,remoteJson.startTime,remoteJson.remind,remoteJson.finish,true)
                     db.save()
                     this.finish()
                 }else{

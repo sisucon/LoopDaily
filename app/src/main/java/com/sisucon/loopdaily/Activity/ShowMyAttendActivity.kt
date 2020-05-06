@@ -41,6 +41,7 @@ class ShowMyAttendActivity : AppCompatActivity(){
             setData()
         }
         adapter.setOnItemClickListener {
+            println("adapter.getItem(it).id = ${adapter.getItem(it).id}")
             startActivity(Intent(this,AttendActionSelectActivity::class.java).putExtra("id",""+adapter.getItem(it).id))
         }
         setData()

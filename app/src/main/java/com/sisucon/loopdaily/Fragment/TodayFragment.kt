@@ -1,10 +1,8 @@
 package com.sisucon.loopdaily.Fragment
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -26,13 +24,11 @@ import com.sisucon.loopdaily.Model.ActionEventDB
 import com.sisucon.loopdaily.Model.PlanDB
 import com.sisucon.loopdaily.Model.PlanEventDB
 import com.sisucon.loopdaily.R
-import com.sisucon.loopdaily.Service.AlarmService
 import com.sisucon.loopdaily.Util.ActionClassModel
 import com.sisucon.loopdaily.Util.NetUtil
 import com.sisucon.loopdaily.Util.TimeLineModel
 import com.sisucon.loopdaily.Util.Utils
 import com.sisucon.loopdaily.lib.AlarmManagerUtils
-import com.sisucon.loopdaily.lib.GlobalValues
 import com.sisucon.loopdaily.lib.OrderStatus
 import es.dmoral.toasty.Toasty
 import org.litepal.LitePal
@@ -73,13 +69,6 @@ class TodayFragment : Fragment() {
     }
 
     fun sendNotificationMsg(channelTitle:String, channelText:String,time:Long,index:Int) {
-//        val alarm =
-//            context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        val myIntent = Intent()
-//        myIntent.action =  GlobalValues.TIMER_ACTION
-//        myIntent.putExtra("channelTitle",channelTitle)
-//        myIntent.putExtra("channelText",channelText)
-//        val sender = PendingIntent.getBroadcast(context, index, myIntent, 0)
         val temp = Utils.createTimeArray(time)
         AlarmManagerUtils.setAlarm(activity,0,temp[0],temp[1],temp[2],temp[0]*60*60+temp[1]*60+temp[2],0,channelText,2)
     }
@@ -89,9 +78,7 @@ class TodayFragment : Fragment() {
     private fun checkPushSwitchStatus() {
         val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(activity!!);
         val isOpend = notificationManager.areNotificationsEnabled()
-        if (isOpend) {
-            Toasty.success(activity!!,"通知已打开").show()
-        } else {
+        if (!isOpend){
             val intent: Intent = Intent()
             try {
                 //8.0及以后版本使用这两个extra.  >=API 26
@@ -175,11 +162,11 @@ class TodayFragment : Fragment() {
         if(LitePal.count(ActionDB::class.java)>0){
             LitePal.findAll(ActionDB::class.java).forEach {
                 var startDay = it.startTime
-                val eventList = LitePal.where("startDay = ? and actionId = ?",""+Utils.getStartTime().time,""+it._id).find(ActionEventDB::class.java)
+                val eventList = LitePal.where("startDay = ? and actionId = ?",""+Utils.getStartTime().time,""+it.id).find(ActionEventDB::class.java)
                 if (eventList.size>0){
                     for (event in eventList){
                         if (!event.isDeleted){
-                            timelinemodelList.add(TimeLineModel(it.name,event.time,if (event.isSuccess)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it.remoteId,event._id,0))
+                            timelinemodelList.add(TimeLineModel(it.name,event.time,if (event.isSuccess)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it.remoteId,event.id,0))
                             sendNotificationMsg("提醒","该"+it.name+"了",event.time.time,timelinemodelList.size)
                         }
                     }
@@ -188,9 +175,9 @@ class TodayFragment : Fragment() {
                         var tempTime = (todayStart.time-startDay.time)%it.loopTime
                         var index = 0
                         while (todayEnd.time-(todayStart.time+tempTime)/it.loopTime>=1){
-                            val temp =  ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it._id,it.remoteId,false,Date(todayStart.time+tempTime))
+                            val temp =  ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it.id,it.remoteId,false,Date(todayStart.time+tempTime))
                             temp.save()
-                            timelinemodelList.add(TimeLineModel(it.name,Date(todayStart.time+tempTime),OrderStatus.INACTIVE,"",it._id,temp._id,0))
+                            timelinemodelList.add(TimeLineModel(it.name,Date(todayStart.time+tempTime),OrderStatus.INACTIVE,"",it.id,temp.id,0))
                             sendNotificationMsg("提醒","该"+it.name+"了",Date(todayStart.time+tempTime).time,notificationSum++)
 
                             tempTime+=it.loopTime
@@ -199,16 +186,16 @@ class TodayFragment : Fragment() {
                     }else{ //事件开始时间是今天0点之后,需计算是否是今天开始
                         var temp = todayEnd.time - startDay.time
                         var index = 0
-                        val tempd = ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it._id,it.remoteId,false,Date(startDay.time))
+                        val tempd = ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it.id,it.remoteId,false,Date(startDay.time))
                         tempd.save()
-                        timelinemodelList.add(TimeLineModel(it.name,Date(startDay.time+it.loopTime),OrderStatus.INACTIVE,"",it._id,tempd._id,0))
+                        timelinemodelList.add(TimeLineModel(it.name,Date(startDay.time+it.loopTime),OrderStatus.INACTIVE,"",it.id,tempd.id,0))
                         sendNotificationMsg("提醒","该"+it.name+"了",Date(startDay.time+it.loopTime).time,notificationSum++)
                         index++
                         while (temp/it.loopTime>=1){
                             temp -= it.loopTime
-                            val tempd = ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it._id,it.remoteId,false,Date(startDay.time+it.loopTime))
+                            val tempd = ActionEventDB(LitePal.count(ActionEventDB::class.java).toLong(),todayStart,index,it.id,it.remoteId,false,Date(startDay.time+it.loopTime))
                             tempd.save()
-                            timelinemodelList.add(TimeLineModel(it.name,Date(startDay.time+it.loopTime),OrderStatus.INACTIVE,"",it._id,tempd._id,0))
+                            timelinemodelList.add(TimeLineModel(it.name,Date(startDay.time+it.loopTime),OrderStatus.INACTIVE,"",it.id,tempd.id,0))
                             sendNotificationMsg("提醒","该"+it.name+"了",Date(startDay.time+it.loopTime).time,notificationSum++)
                             startDay = Date(startDay.time+it.loopTime)
                             index++
@@ -226,9 +213,13 @@ class TodayFragment : Fragment() {
                 var tempTime = (todayStart.time-startTime.time)%it.loopTime
                 var index = 0
                 while ((todayEnd.time-(todayStart.time+tempTime))/it.loopTime>=1){
-                    val planEventDB = PlanEventDB(todayStart.time+startTime.time+it._id,Date(todayStart.time+tempTime),it._id,false,true,Date(it.loopTime),it.name,it.isLoop)
+                    var planEventDB = LitePal.where("planId = ? and startDay = ?",""+it.id,""+Date(todayStart.time+tempTime)).findFirst(PlanEventDB::class.java)
+                    if (planEventDB==null){
+                         planEventDB = PlanEventDB(todayStart.time+startTime.time+it.id,Date(todayStart.time+tempTime),it.id,false,true,Date(it.loopTime),it.name,it.isLoop)
+                    }
+                    println("planEventDB = ${planEventDB._id}")
                     planEventDB.save()
-                    timelinemodelList.add(TimeLineModel(it.name,Date(todayStart.time+tempTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,planEventDB._id,1))
+                    timelinemodelList.add(TimeLineModel(it.name,Date(todayStart.time+tempTime),if (planEventDB.isSuccess)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it.id,planEventDB._id,1))
                     if (it.isRemind)
                     {
                         sendNotificationMsg("提醒","该"+it.name+"了",Date(todayStart.time+tempTime).time,notificationSum++)
@@ -240,9 +231,13 @@ class TodayFragment : Fragment() {
                 var temp = todayEnd.time - startTime.time
                 if (temp>0){
                     var index = 0
-                    val planEventDB = PlanEventDB(startTime.time+it._id,Date(startTime.time),it._id,false,true,Date(it.loopTime),it.name,it.isLoop)
+                    var planEventDB = LitePal.where("planId = ? and startDay = ?",""+it.id,""+Date(startTime.time).time).findFirst(PlanEventDB::class.java)
+                    if (planEventDB==null){
+                        planEventDB = PlanEventDB(startTime.time+it.id,Date(startTime.time),it.id,false,true,Date(it.loopTime),it.name,it.isLoop)
+                    }
                     planEventDB.save()
-                    timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,planEventDB._id,1))
+                    println("planEventDB = ${planEventDB._id}")
+                    timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time),if (planEventDB.isSuccess)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it.id,planEventDB._id,1))
                     if (it.isRemind)
                     {
                         sendNotificationMsg("提醒","该"+it.name+"了",Date(startTime.time).time,notificationSum++)
@@ -250,11 +245,10 @@ class TodayFragment : Fragment() {
                     index++
                     while (temp/it.loopTime>=1){
                         temp -= it.loopTime
-                        timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time+it.loopTime),if (it.isFinish)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it._id,planEventDB._id,1))
+                        timelinemodelList.add(TimeLineModel(it.name,Date(startTime.time+it.loopTime),if (planEventDB.isSuccess)OrderStatus.ACTIVE else OrderStatus.INACTIVE,"",it.id,planEventDB._id,1))
                         if (it.isRemind)
                         {
                             sendNotificationMsg("提醒","该"+it.name+"了",Date(startTime.time+it.loopTime).time,notificationSum++)
-
                         }
                         startTime = Date(startTime.time+it.loopTime)
                         index++

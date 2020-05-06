@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.sisucon.loopdaily.Model.ActionDB
 import com.sisucon.loopdaily.Model.ActionEventDB
 import com.sisucon.loopdaily.Model.ActionModel
 import com.sisucon.loopdaily.R
@@ -64,7 +63,7 @@ class ActionEventDetailActivity : AppCompatActivity(){
             this.finish()
         }
         changeBtn.setOnClickListener {
-            startActivity(            Intent(this,ChangeSelectActivity::class.java).putExtra("id",""+eventModel._id))
+            startActivity(            Intent(this,ChangeSelectActivity::class.java).putExtra("id",""+eventModel.id))
         }
     }
 }

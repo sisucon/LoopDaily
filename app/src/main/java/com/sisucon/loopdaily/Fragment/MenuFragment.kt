@@ -89,30 +89,6 @@ class MenuFragment : Fragment() {
         })
     }).start()
 
-//    private val mPics: MutableList<PhotoBean> = mutableListOf<PhotoBean>()
-//    private fun initData() {
-//        mPics.clear()
-//        val contentResolver: ContentResolver = getContentResolver()
-//        val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-//        val query: Cursor? = contentResolver.query(
-//            uri, arrayOf(
-//                MediaStore.Images.Media.DATA,
-//                MediaStore.Images.Media.DISPLAY_NAME,
-//                MediaStore.Images.Media.DATE_ADDED,
-//                MediaStore.Images.Media._ID
-//            ), null, null, null, null
-//        )
-//        while (query!!.moveToNext()) {
-//            val photoItem = PhotoBean()
-//            photoItem.setPath(query.getString(0))
-//            //这里的下标跟上面的query第一个参数对应，时间是第2个，所以下标为1
-//            photoItem.setCreateDate(query.getLong(1))
-//            photoItem.setName(query.getString(2))
-//            photoItem.setID(query.getInt(query.getColumnIndex(MediaStore.MediaColumns._ID)))
-//            mPics.add(photoItem)
-//        }
-//        query.close()
-//    }
 
     private val isAndroidQ =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q

@@ -31,7 +31,8 @@ class AttendActionActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.attendaction_activity_layout)
         ButterKnife.bind(this)
-        id =  intent.getStringExtra("id")
+        id =  intent.getStringExtra("id")!!
+        println("id = ${id}")
         initView()
     }
 

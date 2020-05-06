@@ -45,9 +45,9 @@ class AttendActionSelectActivity : AppCompatActivity(),View.OnTouchListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.action_select_layout)
         ButterKnife.bind(this)
+        id = intent.getStringExtra("id")
         initTimePicker()
         initView()
-        id = intent.getStringExtra("id")
     }
 
     @SuppressLint("ClickableViewAccessibility")
