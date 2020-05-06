@@ -22,11 +22,12 @@ import com.sisucon.loopdaily.Util.NetUtil
 import com.sisucon.loopdaily.Util.ServerUserModel
 import com.sisucon.loopdaily.Util.Utils
 import com.google.gson.Gson
+import com.sisucon.loopdaily.lib.CircleImageView
 import es.dmoral.toasty.Toasty
 
 class MyPageFragment : Fragment(){
     lateinit var rootView:View
-    lateinit var imageView: ImageView
+    lateinit var imageView: CircleImageView
     lateinit var actionButton:ImageView
     lateinit var textView: TextView
     lateinit var username:TextView
@@ -58,7 +59,7 @@ class MyPageFragment : Fragment(){
         val severUserModel = Gson().fromJson<ServerUserModel>(NetUtil.GetMessage(getString(R.string.server_host)+"/user/myInfo"), ServerUserModel::class.java)
         Handler(context?.mainLooper).post(Runnable {
             username.text = severUserModel.userName
-            Utils.getInstance(context).GetImg(getString(R.string.server_host_file)+"/upload/avator/"+severUserModel.userName+"/"+severUserModel.avatorFileName,imageView,activity)
+            imageView.setImageURL(getString(R.string.server_host_file) + "/upload/avator/" + severUserModel.userName + "/" + severUserModel.avatorFileName)
         })
     }).start()
 }
