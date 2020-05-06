@@ -4,6 +4,7 @@ import android.app.Activity.NOTIFICATION_SERVICE
 import android.app.Activity.RESULT_OK
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -13,6 +14,7 @@ import android.net.Uri
 import android.os.*
 import android.os.StrictMode.VmPolicy
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -38,19 +40,25 @@ import com.sisucon.loopdaily.lib.UriToPath.*
 import es.dmoral.toasty.Toasty
 import org.litepal.LitePal
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
 
 class MenuFragment : Fragment() {
-    lateinit var unbinder : Unbinder
+    lateinit var unbinder: Unbinder
     private val CODE_GALLERY_REQUEST = 0xa0 //本地
     private var cropImageUri: Uri? = null
     private val CROP_PICTURE = 2 //裁剪后图片返回码
-    lateinit var userAvator:CircleImageView
-     var vNavigation:NavigationView? = null
-     lateinit var username_menu:TextView
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.menu_fragment,container,false)
+    lateinit var userAvator: CircleImageView
+    var vNavigation: NavigationView? = null
+    lateinit var username_menu: TextView
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val rootView = inflater.inflate(R.layout.menu_fragment, container, false)
         StrictMethod()
         vNavigation = rootView?.findViewById(R.id.leftView) as NavigationView?
         initView()
@@ -58,10 +66,7 @@ class MenuFragment : Fragment() {
     }
 
 
-
-
-
-    fun initView(){
+    fun initView() {
         userAvator = vNavigation?.getHeaderView(0)!!.findViewById(R.id.left_view_userimg)
         userAvator.setOnClickListener {
             choseHeadImageFromGallery()
@@ -74,20 +79,40 @@ class MenuFragment : Fragment() {
         updateUserInfoToView()
     }
 
-    private fun logout(){
+    private fun logout() {
         LitePal.deleteAll(Userkey::class.java)
         activity!!.finish()
-        startActivity(Intent(activity,LoginActivity::class.java))
+        startActivity(Intent(activity, LoginActivity::class.java))
     }
 
 
-    private fun updateUserInfoToView() = Thread(Runnable {
-        val severUserModel = Gson().fromJson<ServerUserModel>(NetUtil.GetMessage(getString(R.string.server_host)+"/user/myInfo"), ServerUserModel::class.java)
+    fun ContentResolver.getFileName(fileUri: Uri): String {
+        var name = ""
+        val returnCursor = this.query(fileUri, null, null, null, null)
+        if (returnCursor != null) {
+            val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            returnCursor.moveToFirst()
+            name = returnCursor.getString(nameIndex)
+            returnCursor.close()
+        }
+
+        return name
+    }
+
+
+     fun updateUserInfoToView() {
+     Thread(Runnable
+    {
+        val severUserModel = Gson().fromJson<ServerUserModel>(
+            NetUtil.GetMessage(getString(R.string.server_host) + "/user/myInfo"),
+            ServerUserModel::class.java
+        )
         Handler(context!!.mainLooper).post(Runnable {
             username_menu.text = severUserModel.userName
-            userAvator.setImageURL(getString(R.string.server_host_file)+"/upload/avator/"+severUserModel.userName+"/"+severUserModel.avatorFileName)
+            userAvator.setImageURL(getString(R.string.server_host_file) + "/upload/avator/" + severUserModel.userName + "/" + severUserModel.avatorFileName)
         })
     }).start()
+}
 
 
     private val isAndroidQ =
@@ -130,14 +155,24 @@ class MenuFragment : Fragment() {
                 if (cropImageUri!=null)
                 {
                     println(cropImageUri!!.path)
-                    var file = File(cropImageUri!!.path)
                     println()
                     println(getPath(activity!!,cropImageUri))
-                    println(file.name)
-                    println(file.absolutePath)
                     println("URI "+UriToPath.getFilePathFromURI(activity,cropImageUri))
+                    val parcelFileDescriptor = activity!!.contentResolver.openFileDescriptor(cropImageUri!!, "r", null)
+                    var file: File? = null
+                    parcelFileDescriptor?.let {
+                        val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+                          file = File(activity!!.cacheDir, activity!!.contentResolver.getFileName(
+                             cropImageUri!!
+                         ))
+                        val outputStream = FileOutputStream(file)
+                        inputStream.copyTo(outputStream,1024)
+                        println(file!!.name)
+                        println(file!!.absolutePath)
+                    }
                     Thread(Runnable {
-                        val result =  NetUtil.PostFile(getString(R.string.server_host)+"/user/uploadAvator",File(getRealPathFromUriAboveApi19(activity!!,cropImageUri)))
+                        val result =  NetUtil.PostFile(getString(R.string.server_host)+"/user/uploadAvator", file!!)
+//                        val result =  NetUtil.PostFile(getString(R.string.server_host)+"/user/uploadAvator",File(getRealPathFromUriAboveApi19(activity!!,file)))
                         activity!!.runOnUiThread {
                             Toasty.info(activity!!,""+result).show()
                             updateUserInfoToView()
